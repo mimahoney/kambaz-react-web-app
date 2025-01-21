@@ -267,11 +267,9 @@ Please
 to get dummy text<br/>
 
 <h4>Anchor tag</h4>
-Please
-<a href="https://github.com/mimahoney/kanbas-react-web-app.git" id="wd-github">click here</a>
-to see git hub<br/>
-
-
+Please 
+<a href="https://github.com/mimahoney/kambaz-react-web-app.git" id="wd-github">click here</a>
+ to see git hub<br/>
       </div>
   );
 
