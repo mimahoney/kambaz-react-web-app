@@ -1,5 +1,5 @@
-import { Form, FormLabel, FormGroup, FormControl, Nav, Card, FormSelect, InputGroup, Row, Col, Button } from "react-bootstrap";
-import FormRange from 'react-bootstrap/FormRange';
+import { Nav, Card, Button } from "react-bootstrap";
+
 
 
 import "./index.css";

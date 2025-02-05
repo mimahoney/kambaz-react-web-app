@@ -1,7 +1,7 @@
 //import ModulesControls from "./Modules/ModulesControls"
 import { BsGripVertical } from "react-icons/bs"
 import AssignmentControlButtons from "./AssignmentControlButtons"
-import { Button, Dropdown } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import AssignmentControl from "./AssignmentControl"
 import { CiSearch } from "react-icons/ci";
 import "./style.css"
