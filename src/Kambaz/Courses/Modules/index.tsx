@@ -1,8 +1,4 @@
-import { Button } from "react-bootstrap";
-import { PiDotsSixVerticalBold, PiDotsThreeVertical } from "react-icons/pi";
-import GreenCheckmark from "./GreenCheckmark";
-import "../../styles.css";  
-import { FiPlus } from "react-icons/fi";
+
 import ModulesControls from "./ModulesControls"
 import { BsGripVertical } from "react-icons/bs"
 import LessonControlButtons from "./LessonControlButtons"
