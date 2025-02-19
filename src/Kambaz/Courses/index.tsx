@@ -15,26 +15,20 @@ export default function Courses() {
   const { pathname } = useLocation();
 
   return (
-    <div className="d-flex flex-column">  {/* 🔄 Changed: flex-column to stack title and hr */}
+    <div className="d-flex flex-column">
           <h2 className="text-danger">
             <FaAlignJustify className="me-4 fs-4 mb-1" />
             {course && course.name} &gt; {pathname.split("/")[4]}
           </h2>
           <hr />
         
-    <div id="wd-courses" className="d-flex flex-row">  {/* 🔄 Changed: flex-row to align side by side */}
-      
-      {/* Sidebar for Navigation */}
-      <div className="d-none d-md-flex flex-column p-3">  {/* 🔄 Changed: flex-column to stack items vertically */}
+    <div id="wd-courses" className="d-flex flex-row"> 
+      <div className="d-none d-md-flex flex-column p-3"> 
         <CourseNavigation />
       </div>
 
-      {/* Main Content Area */}
-      <div className="d-flex flex-column flex-grow-1 p-4">  {/* 🔄 Changed: flex-column to ensure stacked content */}
+      <div className="d-flex flex-column flex-grow-1 p-4">
         
-
-
-        {/* Course Content Routes */}
         <Routes>
           <Route path="/" element={<Navigate to="Home" />} />
           <Route path="Home" element={<Home />} />
