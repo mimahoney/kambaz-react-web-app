@@ -1,0 +1,9 @@
+[
+    { "_id": "u1", "firstName": "Mitch", "lastName": "Zie", "loginId": "jdoe", "section": "1", "role": "Student", "lastActivity": "Feb 18", "totalActivity": "1h" },
+    { "_id": "u2", "firstName": "Jason", "lastName": "Omot", "loginId": "jsmith", "section": "1", "role": "TA", "lastActivity": "Feb 18", "totalActivity": "2h" },
+    { "_id": "u3", "firstName": "Emily", "lastName": "Ev", "loginId": "abrown", "section": "1", "role": "Student", "lastActivity": "Feb 18", "totalActivity": "1h" },
+    { "_id": "u4", "firstName": "Bobby", "lastName": "Simploy", "loginId": "bjohnson", "section": "2", "role": "Student", "lastActivity": "Feb 18", "totalActivity": "2h" },
+    { "_id": "u5", "firstName": "Emma", "lastName": "Mcdonald", "loginId": "ewilson", "section": "1", "role": "Student", "lastActivity": "Feb 18", "totalActivity": "1h" },
+    { "_id": "u6", "firstName": "Ava", "lastName": "Marie", "loginId": "otaylor", "section": "2", "role": "Student", "lastActivity": "Feb 18", "totalActivity": "2h" },
+    { "_id": "u7", "firstName": "Maddie", "lastName": "Lee", "loginId": "smiller", "section": "1", "role": "Student", "lastActivity": "Feb 18", "totalActivity": "1h" }
+  ]
