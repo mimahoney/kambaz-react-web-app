@@ -4,6 +4,8 @@ import AssignmentControlButtons from "./AssignmentControlButtons"
 import { Button } from "react-bootstrap";
 import AssignmentControl from "./AssignmentControl"
 import { CiSearch } from "react-icons/ci";
+import * as db from "../../Database";
+import { Link, useParams } from "react-router-dom";
 import "./style.css"
 //import ModuleControlButtons from "../../Modules/ModuleControlButtons";
 
@@ -11,106 +13,175 @@ import { ListGroup } from "react-bootstrap";
 
 
 export default function Assignments() {
-return (
-<div id="wd-assignments" className="container">
-
-<div id="search-buttons-top" className="d-flex justify-content-between align-items-center gap-2">
-
-        <div className="search-assignment justify-content-start">
-              <CiSearch />
-              <input
-                placeholder="Search for Assignments"
-                id="wd-search-assignment"
-                className="search-input"
-              />
-            </div>
-        <div className = "right-aligned-buttons justify-content-end">
-        <Button size="lg" className="me-1 float-end" id="wd-add-assignment-group" variant="outline-secondary">
-        + Group
-        </Button>
-        <Button size="lg" className="me-1 float-end" id="wd-add-assignment" variant="danger">
-        + Assignment
-        </Button>
-        </div>
-    </div>
+    const { cid } = useParams();
+    const assignments = db.assignments;
+    const courseAssignments = assignments.filter((assignment) => assignment.course === cid);
 
 
-  {/* <AssignmentControl /><br /><br /><br /> */}
-  <ListGroup className="rounded-0" id="wd-modules">
-    <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
-      <div className="wd-title p-3 ps-2 bg-secondary d-flex align-items-center">
-        <BsGripVertical className="me-2 fs-3" /> Assignments 
-        <span id="wd-assignments-percentage" className="border rounded-pill px-3 py-1 text-muted ms-auto">
-          40% of Total
-        </span>
-        <AssignmentControl />
+  return (
+  <div id="wd-assignments" className="container">
+  
+  <div id="search-buttons-top" className="d-flex justify-content-between align-items-center gap-2">
+  
+          <div className="search-assignment justify-content-start">
+                <CiSearch />
+                <input
+                  placeholder="Search for Assignments"
+                  id="wd-search-assignment"
+                  className="search-input"
+                />
+              </div>
+          <div className = "right-aligned-buttons justify-content-end">
+          <Button size="lg" className="me-1 float-end" id="wd-add-assignment-group" variant="outline-secondary">
+          + Group
+          </Button>
+          <Button size="lg" className="me-1 float-end" id="wd-add-assignment" variant="danger">
+          + Assignment
+          </Button>
+          </div>
       </div>
-      <ListGroup className="wd-lessons rounded-0 assignment-item">
-        
-        <ListGroup.Item className="wd-lesson p-3 ps-1">
-          <BsGripVertical className="me-2 fs-3" />
-          <a href="#/Kambaz/Courses/1234/Assignments/123" className="wd-assignment-link fw-bold">
-      A1 - ENV + HTML
-      </a>
-      <div className="d-flex align-items-center justify-content-between">
-    <span className="text-muted">
-      Multiple Modules | <b>Not available until </b>May 6th at 12:00am | 
-      <b> Due</b> May 13th at 11:59pm | 100 pts
-    </span>
 
-  <AssignmentControlButtons />
-</div>
 
-      
+      <ListGroup className="rounded-0" id="wd-modules">
+        <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
+          <div className="wd-title p-3 ps-2 bg-secondary d-flex align-items-center">
+            <BsGripVertical className="me-2 fs-3" /> Assignments
+            <span id="wd-assignments-percentage" className="border rounded-pill px-3 py-1 text-muted ms-auto">
+              40% of Total
+            </span>
+            <AssignmentControl />
+          </div>
+          <ListGroup className="wd-lessons rounded-0 assignment-item">
+              {courseAssignments.map((assignment) => (
+                <ListGroup.Item key={assignment._id} className="wd-lesson p-3 ps-1">
+                  <BsGripVertical className="me-2 fs-3" />
+                  <Link
+                    to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
+                    className="wd-assignment-link fw-bold"
+                  >
+                    {assignment.title}
+                  </Link>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <span className="text-muted">
+                      <span className="text-danger">{assignment.module}</span> | <b>Not available until </b>
+                      {assignment.available} | <b> Due</b> {assignment.due} | {assignment.points} pts
+                    </span>
+                    <AssignmentControlButtons />
+                  </div>
+                </ListGroup.Item>
+              ))
+              }
+          </ListGroup>
         </ListGroup.Item>
-        
-
-        <ListGroup.Item className="wd-lesson p-3 ps-1">
-          <BsGripVertical className="me-2 fs-3" /> <a href="#/Kambaz/Courses/1234/Assignments/123" className="wd-assignment-link fw-bold">
-      A2 - CSS
-      </a>
-      <div className="d-flex align-items-center justify-content-between">
-      <span className="text-muted">
-        Multiple Modules | <b>Not available until </b>May 6th at 12:00am | 
-        <b> Due</b> May 20th at 11:59pm | 100 pts
-      </span>
-
-  <AssignmentControlButtons />
-</div>
-
-
-
-
-        </ListGroup.Item>
-
-
-
-
-
-
-
-        <ListGroup.Item className="wd-lesson p-3 ps-1">
-        <BsGripVertical className="me-2 fs-3" /><a href="#/Kambaz/Courses/1234/Assignments/123" className="wd-assignment-link fw-bold">
-      A3 - JAVASCRIPT
-      </a>
-      <div className="d-flex align-items-center justify-content-between">
-      <span className="text-muted">
-        Multiple Modules | <b>Not available until </b>May 6th at 12:00am | 
-        <b> Due</b> May 27th at 11:59pm | 100 pts
-      </span>
-
-  <AssignmentControlButtons />
-</div>
-      
-      
-      </ListGroup.Item>
       </ListGroup>
-    </ListGroup.Item>
-  </ListGroup>
-</div>
+    </div>
+  
+  
+  )}
+  
 
 
-)}
+// export default function Assignments() {
+// return (
+// <div id="wd-assignments" className="container">
+
+// <div id="search-buttons-top" className="d-flex justify-content-between align-items-center gap-2">
+
+//         <div className="search-assignment justify-content-start">
+//               <CiSearch />
+//               <input
+//                 placeholder="Search for Assignments"
+//                 id="wd-search-assignment"
+//                 className="search-input"
+//               />
+//             </div>
+//         <div className = "right-aligned-buttons justify-content-end">
+//         <Button size="lg" className="me-1 float-end" id="wd-add-assignment-group" variant="outline-secondary">
+//         + Group
+//         </Button>
+//         <Button size="lg" className="me-1 float-end" id="wd-add-assignment" variant="danger">
+//         + Assignment
+//         </Button>
+//         </div>
+//     </div>
+
+
+//   {/* <AssignmentControl /><br /><br /><br /> */}
+//   <ListGroup className="rounded-0" id="wd-modules">
+//     <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
+//       <div className="wd-title p-3 ps-2 bg-secondary d-flex align-items-center">
+//         <BsGripVertical className="me-2 fs-3" /> Assignments 
+//         <span id="wd-assignments-percentage" className="border rounded-pill px-3 py-1 text-muted ms-auto">
+//           40% of Total
+//         </span>
+//         <AssignmentControl />
+//       </div>
+//       <ListGroup className="wd-lessons rounded-0 assignment-item">
+        
+//         <ListGroup.Item className="wd-lesson p-3 ps-1">
+//           <BsGripVertical className="me-2 fs-3" />
+//           <a href="#/Kambaz/Courses/1234/Assignments/123" className="wd-assignment-link fw-bold">
+//       A1 - ENV + HTML
+//       </a>
+//       <div className="d-flex align-items-center justify-content-between">
+//     <span className="text-muted">
+//       Multiple Modules | <b>Not available until </b>May 6th at 12:00am | 
+//       <b> Due</b> May 13th at 11:59pm | 100 pts
+//     </span>
+
+//   <AssignmentControlButtons />
+// </div>
+
+      
+//         </ListGroup.Item>
+        
+
+//         <ListGroup.Item className="wd-lesson p-3 ps-1">
+//           <BsGripVertical className="me-2 fs-3" /> <a href="#/Kambaz/Courses/1234/Assignments/123" className="wd-assignment-link fw-bold">
+//       A2 - CSS
+//       </a>
+//       <div className="d-flex align-items-center justify-content-between">
+//       <span className="text-muted">
+//         Multiple Modules | <b>Not available until </b>May 6th at 12:00am | 
+//         <b> Due</b> May 20th at 11:59pm | 100 pts
+//       </span>
+
+//   <AssignmentControlButtons />
+// </div>
+
+
+
+
+//         </ListGroup.Item>
+
+
+
+
+
+
+
+//         <ListGroup.Item className="wd-lesson p-3 ps-1">
+//         <BsGripVertical className="me-2 fs-3" /><a href="#/Kambaz/Courses/1234/Assignments/123" className="wd-assignment-link fw-bold">
+//       A3 - JAVASCRIPT
+//       </a>
+//       <div className="d-flex align-items-center justify-content-between">
+//       <span className="text-muted">
+//         Multiple Modules | <b>Not available until </b>May 6th at 12:00am | 
+//         <b> Due</b> May 27th at 11:59pm | 100 pts
+//       </span>
+
+//   <AssignmentControlButtons />
+// </div>
+      
+      
+//       </ListGroup.Item>
+//       </ListGroup>
+//     </ListGroup.Item>
+//   </ListGroup>
+// </div>
+
+
+// )}
 
 
 
