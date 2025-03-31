@@ -664,11 +664,11 @@
 
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { addCourse } from "./Courses/courseReducer";
 import { Card, FormControl, Button } from "react-bootstrap";
-import EnrollmentButton from "./Courses/People/EnrollmentButton";
+import EnrollmentButtonUpdated from "./Enrollments/EnrollmentButton";
 
 
 export default function Dashboard({
@@ -694,6 +694,7 @@ export default function Dashboard({
   const isStudentTrue = currentUser?.role === "Student";
   const [courseName, setCourseName] = useState("");
   const [showEnrollments, setShowEnrollments] = useState(false);
+  
   const isEnrolledTrue = (courseId: string) =>
     enrollments.some((enrollment: any) => enrollment.user === currentUser._id && enrollment.course === courseId
     );
@@ -739,15 +740,17 @@ export default function Dashboard({
         {displayedCourses.map((course: any) => (
           <div key={course._id} className="col" style={{ width: "300px" }}>
             <div className="card">
-              <Link
+              {/* <Link
                 to={
-                  (isEnrolledTrue(course._id) || isFacultyTrue) ? `/Kambaz/Courses/${course._id}/Home` : `/Kambaz/Dashboard`
+                  `/Kambaz/Courses/${course._id}/Home` 
                 }
                 className="wd-dashboard-course-link text-decoration-none text-dark"
-              >
-                <Card.Img src={course.image } variant="top" width="100%" height={160} />
+              > */}
+                <Card.Img src={course.image } variant="top" width="100%" height={160} 
+                onClick={() => (`/Kambaz/Courses/${course._id}/Home`)}
+                />
                 <Card.Body className="card-body">
-                  <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                  <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden" onClick={() => (`/Kambaz/Courses/${course._id}/Home`)}>
                     {course.name}
                   </Card.Title>
                   <Card.Text className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
@@ -755,7 +758,7 @@ export default function Dashboard({
                   </Card.Text>
 
                   {isStudentTrue ? (
-                    <EnrollmentButton courseId={course._id} isEnrolled={isEnrolledTrue(course._id)} currentUser={currentUser} />
+                    <EnrollmentButtonUpdated courseId={course._id} isEnrolled={(course._id)} currentUser={currentUser} />
                   ): null}
 
                   {isFacultyTrue ? (
@@ -785,7 +788,7 @@ export default function Dashboard({
                     </>
                   ): null}
                 </Card.Body>
-              </Link>
+              {/* </Link> */}
             </div>
           </div>
         ))}

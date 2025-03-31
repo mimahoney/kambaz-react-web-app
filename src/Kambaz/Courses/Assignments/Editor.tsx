@@ -1,54 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Container, Form, Row, Col } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import * as db from "../../Database";
-import { useDispatch } from "react-redux";
-import { addAssignment, updateAssignment } from "./reducer";
+import * as assignmentClient from "./client";
 
 export default function AssignmentEditor() {
-  const { aid, cid } = useParams(); 
+  const { aid, cid } = useParams();
   const navigate = useNavigate();
 
-  const existingAssignment = db.assignments.find((a) => a._id === aid);
-  const [assignment, setAssignment] = useState(existingAssignment || {
-    _id: uuidv4(), title: "", description: "", points: "100",  due: "", available: "", availableUntil: "", course: cid, module: "Multiple Modules",
+  //uuidv4
+  const [assignment, setAssignment] = useState<any>({
+    _id: uuidv4(), title: "", description: "", points: "100", due: "", available: "", availableUntil: "", course: cid, module: "Multiple Modules",
   });
 
-const dispatch = useDispatch();
+  useEffect(() => {
+    const loadAssignment = async () => {
+      if (aid !== "new") {
+        const existing = await assignmentClient.findAssignment(aid!);
+        setAssignment(existing);
+      }
+    };
+    loadAssignment();
+  }, [aid]);
 
-const save = () => {
-  if (aid === "new") {
-    dispatch(addAssignment({ ...assignment }));
-  } else {
-    dispatch(updateAssignment({ ...assignment }));
-  }
-  navigate(`/Kambaz/Courses/${cid}/Assignments`);
-};
+  const save = async () => {
+    if (aid === "new") {
+      await assignmentClient.createAssignmentForCourse(cid!, assignment);
+    } else {
+      await assignmentClient.updateAssignment(assignment);
+    }
+    navigate(`/Kambaz/Courses/${cid}/Assignments`);
+  };
 
-  
-  const uTitle = (e: any) => setAssignment({ ...assignment, title: e.target.value });
-  const uDescription = (e: any) => setAssignment({ ...assignment, description: e.target.value });
-  const uPoints = (e: any) => setAssignment({ ...assignment, points: e.target.value });
-  const uDue = (e: any) => setAssignment({ ...assignment, due: e.target.value });
-  const uAvailable = (e: any) => setAssignment({ ...assignment, available: e.target.value });
-  const uAvailableUntil = (e: any) => setAssignment({ ...assignment, availableUntil: e.target.value });
+  const u = (key: string) => (e: any) => setAssignment({ ...assignment, [key]: e.target.value });
 
   return (
     <Container>
       <div id="wd-assignments-editor">
         <Form.Label htmlFor="title">Assignment Name</Form.Label>
-        <Form.Control className="mb-2" id="title" value={assignment.title} onChange={uTitle} />
+        <Form.Control className="mb-2" id="title" value={assignment.title} onChange={u("title")} />
 
         <Form.Label htmlFor="description">Description</Form.Label>
-        <textarea id="description" className="w-100 mb-2" value={assignment.description} onChange={uDescription} />
+        <textarea id="description" className="w-100 mb-2" value={assignment.description} onChange={u("description")} />
 
         <Row className="mb-2">
           <Col className="text-end">
             <Form.Label className="wd-points">Points</Form.Label>
           </Col>
           <Col>
-            <Form.Control id="points" value={assignment.points} onChange={uPoints}/>
+            <Form.Control id="points" value={assignment.points} onChange={u("points")} />
           </Col>
         </Row>
 
@@ -58,7 +58,7 @@ const save = () => {
               <Form.Label htmlFor="due">Due Date</Form.Label>
             </Col>
             <Col>
-              <Form.Control id="due" type="date" value={assignment.due} onChange={uDue}/>
+              <Form.Control id="due" type="date" value={assignment.due} onChange={u("due")} />
             </Col>
           </Row>
 
@@ -66,17 +66,14 @@ const save = () => {
             <Col className="text-end">
               <Form.Label htmlFor="available">Available From</Form.Label>
             </Col>
-
             <Col>
-              <Form.Control id="available" type="date" value={assignment.available} onChange={uAvailable} />
+              <Form.Control id="available" type="date" value={assignment.available} onChange={u("available")} />
             </Col>
-
             <Col className="text-end">
               <Form.Label htmlFor="availableUntil">Available Until</Form.Label>
             </Col>
-
             <Col>
-              <Form.Control id="availableUntil" type="date" value={assignment.due} onChange={uAvailableUntil} />
+              <Form.Control id="availableUntil" type="date" value={assignment.availableUntil} onChange={u("availableUntil")} />
             </Col>
           </Row>
         </div>
@@ -93,6 +90,106 @@ const save = () => {
     </Container>
   );
 }
+
+
+
+
+
+// import { useState } from "react";
+// import { Button, Container, Form, Row, Col } from "react-bootstrap";
+// import { useParams, useNavigate } from "react-router-dom";
+// import { v4 as uuidv4 } from "uuid";
+// import * as db from "../../Database";
+// import { useDispatch } from "react-redux";
+// import { addAssignment, updateAssignment } from "./reducer";
+
+// export default function AssignmentEditor() {
+//   const { aid, cid } = useParams(); 
+//   const navigate = useNavigate();
+
+//   const existingAssignment = db.assignments.find((a) => a._id === aid);
+//   const [assignment, setAssignment] = useState(existingAssignment || {
+//     _id: uuidv4(), title: "", description: "", points: "100",  due: "", available: "", availableUntil: "", course: cid, module: "Multiple Modules",
+//   });
+
+// const dispatch = useDispatch();
+
+// const save = () => {
+//   if (aid === "new") {
+//     dispatch(addAssignment({ ...assignment }));
+//   } else {
+//     dispatch(updateAssignment({ ...assignment }));
+//   }
+//   navigate(`/Kambaz/Courses/${cid}/Assignments`);
+// };
+
+  
+//   const uTitle = (e: any) => setAssignment({ ...assignment, title: e.target.value });
+//   const uDescription = (e: any) => setAssignment({ ...assignment, description: e.target.value });
+//   const uPoints = (e: any) => setAssignment({ ...assignment, points: e.target.value });
+//   const uDue = (e: any) => setAssignment({ ...assignment, due: e.target.value });
+//   const uAvailable = (e: any) => setAssignment({ ...assignment, available: e.target.value });
+//   const uAvailableUntil = (e: any) => setAssignment({ ...assignment, availableUntil: e.target.value });
+
+//   return (
+//     <Container>
+//       <div id="wd-assignments-editor">
+//         <Form.Label htmlFor="title">Assignment Name</Form.Label>
+//         <Form.Control className="mb-2" id="title" value={assignment.title} onChange={uTitle} />
+
+//         <Form.Label htmlFor="description">Description</Form.Label>
+//         <textarea id="description" className="w-100 mb-2" value={assignment.description} onChange={uDescription} />
+
+//         <Row className="mb-2">
+//           <Col className="text-end">
+//             <Form.Label className="wd-points">Points</Form.Label>
+//           </Col>
+//           <Col>
+//             <Form.Control id="points" value={assignment.points} onChange={uPoints}/>
+//           </Col>
+//         </Row>
+
+//         <div className="border p-3 rounded mb-2">
+//           <Row className="mb-2">
+//             <Col className="text-end">
+//               <Form.Label htmlFor="due">Due Date</Form.Label>
+//             </Col>
+//             <Col>
+//               <Form.Control id="due" type="date" value={assignment.due} onChange={uDue}/>
+//             </Col>
+//           </Row>
+
+//           <Row className="mb-2">
+//             <Col className="text-end">
+//               <Form.Label htmlFor="available">Available From</Form.Label>
+//             </Col>
+
+//             <Col>
+//               <Form.Control id="available" type="date" value={assignment.available} onChange={uAvailable} />
+//             </Col>
+
+//             <Col className="text-end">
+//               <Form.Label htmlFor="availableUntil">Available Until</Form.Label>
+//             </Col>
+
+//             <Col>
+//               <Form.Control id="availableUntil" type="date" value={assignment.due} onChange={uAvailableUntil} />
+//             </Col>
+//           </Row>
+//         </div>
+
+//         <div className="right-aligned-assignment-editor-buttons justify-content-end mt-2">
+//           <Button size="lg" className="me-1 float-end" variant="danger" onClick={save}>
+//             Save
+//           </Button>
+//           <Button size="lg" className="me-1 float-end" variant="outline-secondary" onClick={() => navigate(`/Kambaz/Courses/${cid}/Assignments`)}>
+//             Cancel
+//           </Button>
+//         </div>
+//       </div>
+//     </Container>
+//   );
+// }
 
 
 

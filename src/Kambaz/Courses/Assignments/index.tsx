@@ -1,58 +1,43 @@
-//import ModulesControls from "./Modules/ModulesControls"
+
 import { BsGripVertical } from "react-icons/bs"
 import AssignmentControlButtons from "./AssignmentControlButtons"
 import { Button } from "react-bootstrap";
 import AssignmentControl from "./AssignmentControl"
 import { CiSearch } from "react-icons/ci";
-import * as db from "../../Database";
+//import * as db from "../../Database";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import "./style.css"
-//import { v4 as uuidv4 } from "uuid";
-import { useState } from "react";
+import * as assignmentClient from "./client.ts"; 
+import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
-
-
-
-//import ModuleControlButtons from "../../Modules/ModuleControlButtons";
-
 import { ListGroup } from "react-bootstrap";
 
 
 export default function Assignments() {
     const { cid } = useParams();
     const n = useNavigate();
-    const [assignments, setAssignments] = useState<any[]>(db.assignments);
+    const [assignments, setAssignments] = useState<any[]>([]);
     //const [assignmentName, setAssignmentName] = useState("");
-    const courseAssignments = assignments.filter((assignment) => assignment.course === cid);
+    // const [courseAssignments, setCourseAssignments] = useState<any[]>([]);
 
 
-
-    // const addAssignment = () => {
-    //   const newAssignment = {
-    //     _id: uuidv4(), title: assignmentName, course: cid, module: "", available: "Jan 31st",
-    //     due: "Feb 7th",
-    //     points: "100",
-    //     description: "",
-    //   };
-    //   setAssignments([...assignments, newAssignment]); 
-    //   setAssignmentName("");
-    // };
-
-    const deleteAssignment = (assignmentId: string) => {
+    useEffect(() => {
+      const fetchAssignments = async () => {
+        const courses = await assignmentClient.findAssignmentsForCourse(cid!);
+        setAssignments(courses);
+      };
+      fetchAssignments();
+    }, [cid]);
+    
+    const deleteAssignment = async (assignmentId: string) => {
       if (window.confirm("Are you sure you'd like to delete?")) {
-        setAssignments(assignments.filter((a) => a._id !== assignmentId));}
+        await assignmentClient.deleteAssignment(assignmentId);
+        setAssignments(assignments.filter((a) => a._id !== assignmentId));
+      }
     };
 
  
-    // const editAssignment = (assignmentId: string) => {
-    //   setAssignments(assignments.map((a) => (a._id === assignmentId ? { ...a, editing: true } : a)));
-    // };
-    
-    // const updateAssignment = (updatedAssignment: any) => {
-    //   setAssignments(assignments.map((a) => (a._id === updatedAssignment._id ? updatedAssignment : a)));
-    // };
-    
-    
+
 
   return (
   <div id="wd-assignments" className="container">
@@ -88,7 +73,8 @@ export default function Assignments() {
             <AssignmentControl />
           </div>
           <ListGroup className="wd-lessons rounded-0 assignment-item">
-              {courseAssignments.map((assignment) => (
+            
+              {assignments.map((assignment) => (
                 <ListGroup.Item key={assignment._id} className="wd-lesson p-3 ps-1">
                   <BsGripVertical className="me-2 fs-3" />
                   <Link
@@ -119,6 +105,148 @@ export default function Assignments() {
   
   
   )}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// //import ModulesControls from "./Modules/ModulesControls"
+// import { BsGripVertical } from "react-icons/bs"
+// import AssignmentControlButtons from "./AssignmentControlButtons"
+// import { Button } from "react-bootstrap";
+// import AssignmentControl from "./AssignmentControl"
+// import { CiSearch } from "react-icons/ci";
+// import * as db from "../../Database";
+// import { Link, useParams, useNavigate } from "react-router-dom";
+// import "./style.css"
+// //import { v4 as uuidv4 } from "uuid";
+// import { useState } from "react";
+// import { FaTrash } from "react-icons/fa";
+
+
+
+// //import ModuleControlButtons from "../../Modules/ModuleControlButtons";
+
+// import { ListGroup } from "react-bootstrap";
+
+
+// export default function Assignments() {
+//     const { cid } = useParams();
+//     const n = useNavigate();
+//     const [assignments, setAssignments] = useState<any[]>(db.assignments);
+//     //const [assignmentName, setAssignmentName] = useState("");
+//     const courseAssignments = assignments.filter((assignment) => assignment.course === cid);
+
+
+
+//     // const addAssignment = () => {
+//     //   const newAssignment = {
+//     //     _id: uuidv4(), title: assignmentName, course: cid, module: "", available: "Jan 31st",
+//     //     due: "Feb 7th",
+//     //     points: "100",
+//     //     description: "",
+//     //   };
+//     //   setAssignments([...assignments, newAssignment]); 
+//     //   setAssignmentName("");
+//     // };
+
+//     const deleteAssignment = (assignmentId: string) => {
+//       if (window.confirm("Are you sure you'd like to delete?")) {
+//         setAssignments(assignments.filter((a) => a._id !== assignmentId));}
+//     };
+
+ 
+//     // const editAssignment = (assignmentId: string) => {
+//     //   setAssignments(assignments.map((a) => (a._id === assignmentId ? { ...a, editing: true } : a)));
+//     // };
+    
+//     // const updateAssignment = (updatedAssignment: any) => {
+//     //   setAssignments(assignments.map((a) => (a._id === updatedAssignment._id ? updatedAssignment : a)));
+//     // };
+    
+    
+
+//   return (
+//   <div id="wd-assignments" className="container">
+  
+//   <div id="search-buttons-top" className="d-flex justify-content-between align-items-center gap-2">
+  
+//           <div className="search-assignment justify-content-start">
+//                 <CiSearch />
+//                 <input
+//                   placeholder="Search for Assignments"
+//                   id="wd-search-assignment"
+//                   className="search-input"
+//                 />
+//               </div>
+//           <div className = "right-aligned-buttons justify-content-end">
+//           <Button size="lg" className="me-1 float-end" id="wd-add-assignment-group" variant="outline-secondary">
+//           + Group
+//           </Button>
+//           <Button size="lg" className="me-1 float-end" id="wd-add-assignment" variant="danger" onClick={() => n(`/Kambaz/Courses/${cid}/Assignments/new`)}>
+//           + Assignment
+//           </Button>
+//           </div>
+//       </div>
+
+
+//       <ListGroup className="rounded-0" id="wd-modules">
+//         <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
+//           <div className="wd-title p-3 ps-2 bg-secondary d-flex align-items-center">
+//             <BsGripVertical className="me-2 fs-3" /> Assignments
+//             <span id="wd-assignments-percentage" className="border rounded-pill px-3 py-1 text-muted ms-auto">
+//               40% of Total
+//             </span>
+//             <AssignmentControl />
+//           </div>
+//           <ListGroup className="wd-lessons rounded-0 assignment-item">
+//               {courseAssignments.map((assignment) => (
+//                 <ListGroup.Item key={assignment._id} className="wd-lesson p-3 ps-1">
+//                   <BsGripVertical className="me-2 fs-3" />
+//                   <Link
+//                     to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
+//                     className="wd-assignment-link fw-bold"
+//                   >
+//                     {assignment.title}
+//                   </Link>
+//                   <div className="d-flex align-items-center justify-content-between">
+//                     <span className="text-muted">
+//                       <span className="text-danger">{assignment.module}</span> | <b>Not available until </b>
+//                       {assignment.available} | <b> Due</b> {assignment.due} | {assignment.points} pts
+//                     </span>
+                 
+//                     <Button variant="danger" onClick={() => deleteAssignment(assignment._id)}>
+//                   <FaTrash />
+//                   </Button>
+//                     <AssignmentControlButtons
+//                     />
+//                   </div>
+//                 </ListGroup.Item>
+//               ))
+//               }
+//           </ListGroup>
+//         </ListGroup.Item>
+//       </ListGroup>
+//     </div>
+  
+  
+//   )}
   
 
 
