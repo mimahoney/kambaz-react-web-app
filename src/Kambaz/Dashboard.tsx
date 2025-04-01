@@ -669,6 +669,8 @@ import { v4 as uuidv4 } from "uuid";
 import { addCourse } from "./Courses/courseReducer";
 import { Card, FormControl, Button } from "react-bootstrap";
 import EnrollmentButtonUpdated from "./Enrollments/EnrollmentButton";
+import { useNavigate } from "react-router-dom";
+
 
 
 export default function Dashboard({
@@ -693,6 +695,8 @@ export default function Dashboard({
   const isFacultyTrue = currentUser?.role === "Faculty";
   const isStudentTrue = currentUser?.role === "Student";
   const [courseName, setCourseName] = useState("");
+  const navigate = useNavigate();
+
   const [showEnrollments, setShowEnrollments] = useState(false);
   
   const isEnrolledTrue = (courseId: string) =>
@@ -747,10 +751,10 @@ export default function Dashboard({
                 className="wd-dashboard-course-link text-decoration-none text-dark"
               > */}
                 <Card.Img src={course.image } variant="top" width="100%" height={160} 
-                onClick={() => (`/Kambaz/Courses/${course._id}/Home`)}
+                onClick={() => navigate(`/Kambaz/Courses/${course._id}/Home`)}
                 />
                 <Card.Body className="card-body">
-                  <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden" onClick={() => (`/Kambaz/Courses/${course._id}/Home`)}>
+                  <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden" onClick={() => navigate(`/Kambaz/Courses/${course._id}/Home`)}>
                     {course.name}
                   </Card.Title>
                   <Card.Text className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>

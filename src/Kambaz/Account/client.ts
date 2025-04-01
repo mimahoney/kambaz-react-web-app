@@ -37,6 +37,7 @@
 
   
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 export const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 export const USERS_API = `${REMOTE_SERVER}/api/users`;
