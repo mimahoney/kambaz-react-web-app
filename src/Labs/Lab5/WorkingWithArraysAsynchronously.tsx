@@ -6,6 +6,7 @@ import { TiDelete } from "react-icons/ti";
 import * as client from "./client";
 import { FaPencil } from "react-icons/fa6";
 export default function WorkingWithArraysAsynchronously() {
+  
   const [todos, setTodos] = useState<any[]>([]);
   const fetchTodos = async () => {
     const todos = await client.fetchTodos();
@@ -50,6 +51,8 @@ export default function WorkingWithArraysAsynchronously() {
   }
 };
 
+const filtered = todos.filter(todo => todo.title && typeof todo.completed === "boolean");
+setTodos(filtered);
 
 
   useEffect(() => {
@@ -74,6 +77,15 @@ export default function WorkingWithArraysAsynchronously() {
             <FaPencil onClick={() => editTodo(todo)} className="text-primary float-end me-2 mt-1" />
             <input type="checkbox" className="form-check-input me-2"
                    defaultChecked={todo.completed}></input>
+
+{Array.isArray(todos) &&
+  todos
+    .filter((todo) => todo.title && typeof todo.completed === "boolean")
+    .map((todo) => (
+      <ListGroup.Item key={todo.id}>
+        {/* ... existing rendering logic ... */}
+      </ListGroup.Item>
+    ))}
   
 
                    
