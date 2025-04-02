@@ -74,7 +74,9 @@ export default function Assignments() {
           </div>
           <ListGroup className="wd-lessons rounded-0 assignment-item">
             
-              {assignments.map((assignment) => (
+          {Array.isArray(assignments) && assignments.map((assignment) => (
+
+ 
                 <ListGroup.Item key={assignment._id} className="wd-lesson p-3 ps-1">
                   <BsGripVertical className="me-2 fs-3" />
                   <Link
