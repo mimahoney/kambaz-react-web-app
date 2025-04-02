@@ -57,19 +57,30 @@ export default function Kambaz() {
   };
   //const [assignments, setAssignments] = useState<any[]>([]);
 
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  // const { currentUser } = useSelector((state: any) => state.accountReducer);
+  // const fetchCourses = async () => {
+  //   try {
+  //     const courses = await userClient.findMyCourses();
+      
+  //     setCourses(courses);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchCourses();
+  // }, [currentUser]);
   const fetchCourses = async () => {
     try {
-      const courses = await userClient.findMyCourses();
-      
-      setCourses(courses);
+    const courses = await client.fetchAllCourses();
+    setCourses(courses);
     } catch (error) {
-      console.error(error);
+    console.error(error);
     }
-  };
-  useEffect(() => {
+    };
+    useEffect(() => {
     fetchCourses();
-  }, [currentUser]);
+    
 
 
 
