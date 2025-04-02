@@ -3,14 +3,16 @@ axios.defaults.withCredentials = true;
 const axiosWithCredentials = axios.create({ withCredentials: true });
 const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 export const fetchWelcomeMessage = async () => {
-  const response = await axiosWithCredentials.post(`${REMOTE_SERVER}/lab5/welcome`);
+  const response = await axiosWithCredentials.get(`${REMOTE_SERVER}/lab5/welcome`);
   return response.data;
 };
+
 const ASSIGNMENT_API = `${REMOTE_SERVER}/lab5/assignment`;
 export const fetchAssignment = async () => {
-  const response = await axiosWithCredentials.post(`${ASSIGNMENT_API}`);
+  const response = await axiosWithCredentials.get(`${ASSIGNMENT_API}`);
   return response.data;
 };
+
 export const updateTitle = async (title: string) => {
   const response = await axiosWithCredentials.post(`${ASSIGNMENT_API}/title/${title}`);
   return response.data;
