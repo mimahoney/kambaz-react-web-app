@@ -52,7 +52,7 @@ export default function WorkingWithArraysAsynchronously() {
 };
 
 const filtered = todos.filter(todo => todo.title && typeof todo.completed === "boolean");
-setTodos(filtered);
+
 
 
   useEffect(() => {
@@ -79,7 +79,7 @@ setTodos(filtered);
                    defaultChecked={todo.completed}></input>
 
 {Array.isArray(todos) &&
-  todos
+  filtered
     .filter((todo) => todo.title && typeof todo.completed === "boolean")
     .map((todo) => (
       <ListGroup.Item key={todo.id}>
