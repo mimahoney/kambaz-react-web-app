@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import users from "../../Database/users.json";
 import enrollments from "../../Database/enrollments.json";
+
 import "../../styles.css"
 export default function PeopleTable() {
   const { cid } = useParams();
@@ -20,7 +21,8 @@ export default function PeopleTable() {
           </tr>
         </thead>
       <tbody>
-  {users.filter((user) =>
+  {Array.isArray(users) && Array.isArray(enrollments) &&
+  users.filter((user) =>
       enrollments.some((enrollment) => enrollment.user === user._id && enrollment.course === cid)
     )
     .map((user: any) => (
