@@ -25,6 +25,9 @@ import { useState, useEffect } from "react";
 //import { v4 as uuidv4 } from "uuid";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import AssignmentEditor from "./Courses/Assignments/Editor";
+import axios from "axios";
+axios.defaults.withCredentials = true;
+
 
 
 export default function Kambaz() {
@@ -57,30 +60,19 @@ export default function Kambaz() {
   };
   //const [assignments, setAssignments] = useState<any[]>([]);
 
-  // const { currentUser } = useSelector((state: any) => state.accountReducer);
-  // const fetchCourses = async () => {
-  //   try {
-  //     const courses = await userClient.findMyCourses();
-      
-  //     setCourses(courses);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   fetchCourses();
-  // }, [currentUser]);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const fetchCourses = async () => {
     try {
-    const courses = await client.fetchAllCourses();
-    setCourses(courses);
+      const courses = await userClient.findMyCourses();
+      
+      setCourses(courses);
     } catch (error) {
-    console.error(error);
+      console.error(error);
     }
-    };
-    useEffect(() => {
+  };
+  useEffect(() => {
     fetchCourses();
-    
+  }, [currentUser]);
 
 
 
