@@ -21,13 +21,32 @@ export default function Assignments() {
     // const [courseAssignments, setCourseAssignments] = useState<any[]>([]);
 
 
+    // useEffect(() => {
+    //   const fetchAssignments = async () => {
+    //     const courses = await assignmentClient.findAssignmentsForCourse(cid!);
+    //     setAssignments(courses);
+    //   };
+    //   fetchAssignments();
+    // }, [cid]);
+
     useEffect(() => {
       const fetchAssignments = async () => {
-        const courses = await assignmentClient.findAssignmentsForCourse(cid!);
-        setAssignments(courses);
+        try {
+          const courses = await assignmentClient.findAssignmentsForCourse(cid!);
+          if (Array.isArray(courses)) {
+            setAssignments(courses);
+          } else {
+            console.error("Expected an array but got:", courses);
+            setAssignments([]);
+          }
+        } catch (err) {
+          console.error("Failed to fetch assignments:", err);
+          setAssignments([]); // fallback to empty array
+        }
       };
       fetchAssignments();
     }, [cid]);
+    
     
     const deleteAssignment = async (assignmentId: string) => {
       if (window.confirm("Are you sure you'd like to delete?")) {
