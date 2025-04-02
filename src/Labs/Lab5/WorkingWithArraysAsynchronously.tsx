@@ -65,7 +65,7 @@ export default function WorkingWithArraysAsynchronously() {
       <FaPlusCircle onClick={postTodo}   className="text-primary float-end fs-3 me-3" id="wd-post-todo"   />
       </h4>
       <ListGroup>
-        {todos.map((todo) => (
+      {Array.isArray(todos) && todos.map(todo => (
           <ListGroup.Item key={todo.id}>
              
             <FaTrash onClick={() => removeTodo(todo)}

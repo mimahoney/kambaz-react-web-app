@@ -21,8 +21,7 @@ export default function PeopleTable() {
           </tr>
         </thead>
       <tbody>
-  {Array.isArray(users) && Array.isArray(enrollments) &&
-  users.filter((user) =>
+  {users.filter((user) =>
       enrollments.some((enrollment) => enrollment.user === user._id && enrollment.course === cid)
     )
     .map((user: any) => (
