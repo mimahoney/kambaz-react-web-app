@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Container, Form, Row, Col, Tabs, Tab } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import * as assignmentClient from "./client";
+import * as quizClient from "./client.ts";
 import ReactQuill from "react-quill";
 // import "react-quill/dist/quill.snow.css";
 
