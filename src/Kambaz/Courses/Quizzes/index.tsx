@@ -4,7 +4,7 @@ import { Button } from "react-bootstrap";
 import QuizControl from "./QuizControl";
 import { CiSearch } from "react-icons/ci";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import "./style.css";
+// import "./style.css";
 import * as quizClient from "./client.ts";
 import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
@@ -55,7 +55,7 @@ export default function Quizzes() {
           <Button size="lg" className="me-1 float-end" id="wd-add-quiz-group" variant="outline-secondary">
             + Group
           </Button>
-          <Button size="lg" className="me-1 float-end" id="wd-add-quiz" variant="danger" onClick={() => n(`/Kambaz/Courses/${cid}/Quizzes/new`)}>
+          <Button size="lg" className="me-1 float-end" id="wd-add-quiz" variant="danger" onClick={() => n(`/Kambaz/Courses/${cid}/Quizzes`)}>
             + Quiz
           </Button>
         </div>
