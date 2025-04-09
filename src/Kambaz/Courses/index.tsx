@@ -1,40 +1,34 @@
 import CourseNavigation from "./Navigation";
 import Modules from "./Modules";
+import Quizzes from "./Quizzes/index.tsx";
 import Home from "./Home/index.tsx";
 import { Navigate, Route, Routes, useParams, useLocation} from "react-router";
-import { courses } from "../Database";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import { FaAlignJustify } from "react-icons/fa"
 import PeopleTable from "./People/Table"
 
 
-export default function Courses() {
+export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
 
   return (
-    <div className="d-flex flex-column">  {/* 🔄 Changed: flex-column to stack title and hr */}
+    <div className="d-flex flex-column">
           <h2 className="text-danger">
             <FaAlignJustify className="me-4 fs-4 mb-1" />
             {course && course.name} &gt; {pathname.split("/")[4]}
           </h2>
           <hr />
         
-    <div id="wd-courses" className="d-flex flex-row">  {/* 🔄 Changed: flex-row to align side by side */}
-      
-      {/* Sidebar for Navigation */}
-      <div className="d-none d-md-flex flex-column p-3">  {/* 🔄 Changed: flex-column to stack items vertically */}
+    <div id="wd-courses" className="d-flex flex-row"> 
+      <div className="d-none d-md-flex flex-column p-3"> 
         <CourseNavigation />
       </div>
 
-      {/* Main Content Area */}
-      <div className="d-flex flex-column flex-grow-1 p-4">  {/* 🔄 Changed: flex-column to ensure stacked content */}
+      <div className="d-flex flex-column flex-grow-1 p-4">
         
-
-
-        {/* Course Content Routes */}
         <Routes>
           <Route path="/" element={<Navigate to="Home" />} />
           <Route path="Home" element={<Home />} />
@@ -42,6 +36,7 @@ export default function Courses() {
           <Route path="Assignments" element={<Assignments />} />
           <Route path="Assignments/:aid" element={<AssignmentEditor />} />
           <Route path="People" element={<PeopleTable />} />
+          <Route path="Quizzes" element={<Quizzes />} />
         </Routes>
 
       </div>

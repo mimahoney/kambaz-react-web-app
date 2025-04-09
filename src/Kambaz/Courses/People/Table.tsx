@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import users from "../../Database/users.json";
 import enrollments from "../../Database/enrollments.json";
+
 import "../../styles.css"
 export default function PeopleTable() {
   const { cid } = useParams();

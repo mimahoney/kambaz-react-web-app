@@ -2,11 +2,14 @@
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import store from "./Kambaz/store";
+import { Provider } from "react-redux";
 import Labs from "./Labs";
 import Kambaz from "./Kambaz";
 export default function App() {
  return (
   <HashRouter>
+    <Provider store={store}>
    <div>
     <Routes>
      <Route path="/" element={<Navigate to="Labs/Lab1"/>}/>
@@ -14,6 +17,7 @@ export default function App() {
      <Route path="/Kambaz/*" element={<Kambaz />} />
     </Routes>
    </div>
+   </Provider>
   </HashRouter>
 );}
 
