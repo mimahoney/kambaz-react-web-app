@@ -7,14 +7,10 @@ import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import { FaAlignJustify } from "react-icons/fa"
 import PeopleTable from "./People/Table"
-<<<<<<< Updated upstream
-
-=======
+//changes
 import * as client from "../Enrollments/client";
 import { useEffect, useState } from "react";
 import QuizEditor from "./Quizzes/QuizEditor.tsx"
->>>>>>> Stashed changes
-
 export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
