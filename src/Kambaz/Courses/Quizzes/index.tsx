@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button, ListGroup, Dropdown } from "react-bootstrap";
 import { BsGripVertical, BsThreeDotsVertical } from "react-icons/bs";
 import { CiSearch } from "react-icons/ci";
+import { FaBan, FaCheckCircle } from "react-icons/fa";
 import * as quizClient from "./client.ts";
 import QuizControl from "./QuizControl";
 
@@ -33,6 +34,19 @@ export default function Quizzes() {
     if (window.confirm("Are you sure you'd like to delete?")) {
       await quizClient.deleteQuiz(quizId);
       setQuizzes(quizzes.filter((q) => q._id !== quizId));
+    }
+  };
+
+  const togglePublish = async (quizId: string) => {
+    try {
+      const res = await quizClient.togglePublish(quizId);
+      setQuizzes((prev) =>
+        prev.map((q) =>
+          q._id === quizId ? { ...q, published: res.published } : q
+        )
+      );
+    } catch (e) {
+      console.error("Failed to toggle publish status", e);
     }
   };
 
@@ -108,30 +122,50 @@ export default function Quizzes() {
                       {quiz.due} | {quiz.points} pts
                     </span>
 
-                    <Dropdown align="end">
-                      <Dropdown.Toggle
-                        variant="light"
-                        className="border-0 bg-transparent p-0"
+                    <div className="d-flex align-items-center gap-2">
+                      <span
+                        role="button"
+                        className="text-muted fs-4"
+                        title={quiz.published ? "Unpublish Quiz" : "Publish Quiz"}
+                        onClick={() => togglePublish(quiz._id)}
                       >
-                        <BsThreeDotsVertical className="fs-5" />
-                      </Dropdown.Toggle>
+                        {quiz.published ? (
+                          <FaCheckCircle className="text-success" />
+                        ) : (
+                          <FaBan className="text-danger" />
+                        )}
+                      </span>
 
-                      <Dropdown.Menu>
-                        <Dropdown.Item
-                          onClick={() =>
-                            n(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/edit`)
-                          }
+                      <Dropdown align="end">
+                        <Dropdown.Toggle
+                          variant="light"
+                          className="border-0 bg-transparent p-0"
                         >
-                          Edit
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() => deleteQuiz(quiz._id)}
-                          className="text-danger"
-                        >
-                          Delete
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
+                          <BsThreeDotsVertical className="fs-5" />
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                          <Dropdown.Item
+                            onClick={() =>
+                              n(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/edit`)
+                            }
+                          >
+                            Edit
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            onClick={() => deleteQuiz(quiz._id)}
+                            className="text-danger"
+                          >
+                            Delete
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            onClick={() => togglePublish(quiz._id)}
+                          >
+                            {quiz.published ? "Unpublish" : "Publish"}
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </div>
                   </div>
                 </ListGroup.Item>
               ))}
