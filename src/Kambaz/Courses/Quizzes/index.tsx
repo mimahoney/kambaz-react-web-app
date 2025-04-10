@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+
 import { Button, ListGroup, Dropdown } from "react-bootstrap";
 import { BsGripVertical, BsThreeDotsVertical } from "react-icons/bs";
 import { CiSearch } from "react-icons/ci";
 import { FaBan, FaCheckCircle } from "react-icons/fa";
+
 import * as quizClient from "./client.ts";
 import QuizControl from "./QuizControl";
 
@@ -73,7 +75,6 @@ export default function Quizzes() {
           >
             + Group
           </Button>
-<<<<<<< Updated upstream
           <Button
             size="lg"
             className="me-1 float-end"
@@ -81,9 +82,6 @@ export default function Quizzes() {
             variant="danger"
             onClick={() => n(`/Kambaz/Courses/${cid}/Quizzes/new`)}
           >
-=======
-          <Button size="lg" className="me-1 float-end" id="wd-add-quiz" variant="danger" onClick={() => n(`/Kambaz/Courses/${cid}/Quizzes/new`)}>
->>>>>>> Stashed changes
             + Quiz
           </Button>
         </div>
