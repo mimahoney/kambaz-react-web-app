@@ -41,3 +41,8 @@ export const createQuizForCourse = async (courseId: string, quiz: any) => {
   );
   return response.data;
 };
+
+export const togglePublish = async (quizId: string) => {
+  const { data } = await axios.put(`${QUIZZES_API}/${quizId}/publish`);
+  return data;
+};
