@@ -7,7 +7,13 @@ import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import { FaAlignJustify } from "react-icons/fa"
 import PeopleTable from "./People/Table"
+<<<<<<< Updated upstream
 
+=======
+import * as client from "../Enrollments/client";
+import { useEffect, useState } from "react";
+import QuizEditor from "./Quizzes/QuizEditor.tsx"
+>>>>>>> Stashed changes
 
 export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
@@ -37,6 +43,9 @@ export default function Courses({ courses }: { courses: any[]; }) {
           <Route path="Assignments/:aid" element={<AssignmentEditor />} />
           <Route path="People" element={<PeopleTable />} />
           <Route path="Quizzes" element={<Quizzes />} />
+          <Route path="Quizzes/new" element={<QuizEditor />} />
+          <Route path="Quizzes/:qid" element={<QuizEditor />} /> // for editing
+
         </Routes>
 
       </div>

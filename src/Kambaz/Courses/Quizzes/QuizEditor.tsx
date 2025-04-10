@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import * as quizClient from "./client.ts";
 import ReactQuill from "react-quill";
-// import "react-quill/dist/quill.snow.css";
+import "react-quill/dist/quill.snow.css";
 
 export default function AssignmentEditor() {
   const { qid, cid } = useParams();
