@@ -4,8 +4,6 @@ const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 const COURSES_API = `${REMOTE_SERVER}/api/courses`;
 const QUIZZES_API = `${REMOTE_SERVER}/api/quizzes`;
 
-// Need to make some edits to the backend node server
-
 export const fetchAllQuizzes = async () => {
   const { data } = await axios.get(QUIZZES_API);
   return data;
@@ -22,10 +20,7 @@ export const findQuiz = async (quizId: string) => {
 };
 
 export const updateQuiz = async (quiz: any) => {
-  const { data } = await axios.put(
-    `${QUIZZES_API}/${quiz._id}`,
-    quiz
-  );
+  const { data } = await axios.put(`${QUIZZES_API}/${quiz._id}`, quiz);
   return data;
 };
 
@@ -35,14 +30,11 @@ export const findQuizzesForCourse = async (courseId: string) => {
 };
 
 export const createQuizForCourse = async (courseId: string, quiz: any) => {
-  const response = await axios.post(
-    `${COURSES_API}/${courseId}/quizzes`,
-    quiz
-  );
+  const response = await axios.post(`${COURSES_API}/${courseId}/quizzes`, quiz);
   return response.data;
 };
 
 export const togglePublish = async (quizId: string) => {
-  const { data } = await axios.put(`${QUIZZES_API}/${quizId}/publish`);
+  const { data } = await axios.put(`${QUIZZES_API}/${quizId}/toggle`);
   return data;
 };
