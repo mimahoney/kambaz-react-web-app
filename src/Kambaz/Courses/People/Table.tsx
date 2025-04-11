@@ -1,14 +1,17 @@
 
-import { useParams } from "react-router-dom";
-import { FaUserCircle } from "react-icons/fa";
-import users from "../../Database/users.json";
-import enrollments from "../../Database/enrollments.json";
 
+import { FaUserCircle } from "react-icons/fa";
+import * as client from "../../Account/client";
+import { Link } from "react-router-dom";
+
+import PeopleDetails from "./Details";
 import "../../styles.css"
-export default function PeopleTable() {
-  const { cid } = useParams();
+export default function PeopleTable({ users = [] }: { users?: any[] }) {
+
+
   return (
     <div id="wd-people-table">
+      <PeopleDetails />
       <table className="border-spacing-2">
         <thead>
         <tr>
@@ -21,15 +24,16 @@ export default function PeopleTable() {
           </tr>
         </thead>
       <tbody>
-  {users.filter((user) =>
-      enrollments.some((enrollment) => enrollment.user === user._id && enrollment.course === cid)
-    )
-    .map((user: any) => (
-      <tr key={user._id} className="border">
-        <td className="wd-full-name text-nowrap border">
+  {users
+        .map((user) => (
+          <tr key={user._id}>
+            <td className="wd-full-name text-nowrap">
+              <Link to={`/Kambaz/Account/Users/${user._id}`} className="text-decoration-none">
+
           <FaUserCircle className="me-2 fs-1 text-secondary" />
           <span className="wd-first-name">{user.firstName} </span>
           <span className="wd-last-name">{user.lastName}</span>
+          </Link>
         </td>
         <td className="wd-login-id border">{user.loginId}</td>
         <td className="wd-section border">{user.section}</td>
