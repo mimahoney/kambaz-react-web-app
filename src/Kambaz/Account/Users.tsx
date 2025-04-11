@@ -55,10 +55,10 @@ export default function Users() {
  return (
    <div>
      <h3>Users</h3>
-     {/* <button onClick={createUser} className="float-end btn btn-danger wd-add-people">
+     <button onClick={createUser} className="float-end btn btn-danger wd-add-people">
         <FaPlus className="me-2" />
         Users
-      </button> */}
+      </button>
      <FormControl onChange={(e) => filterUsersByName(e.target.value)} placeholder="Search people"
              className="float-start w-25 me-2 wd-filter-by-name" />
      <select value={role} onChange={(e) =>filterUsersByRole(e.target.value)}
