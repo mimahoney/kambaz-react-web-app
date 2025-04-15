@@ -31,10 +31,10 @@ export default function Modules() {
   //   dispatch(addModule(module));
   // };
 
-  const saveModule = async (module: any) => {
-    await modulesClient.updateModule(module);
-    dispatch(updateModule(module));
-  };
+  // const saveModule = async (module: any) => {
+  //   await modulesClient.updateModule(module);
+  //   dispatch(updateModule(module));
+  // };
   const fetchModulesForCourse = async () => {
     const modules = await courseClient.findModulesForCourse(cid!);
     dispatch(setModules(modules));
