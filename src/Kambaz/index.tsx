@@ -161,9 +161,15 @@ const updateEnrollment = async (courseId: string, enrolled: boolean) => {
 
 
 
-            <Route path="Courses/:cid/Assignments/new" element={ <ProtectedRoute> <AssignmentEditor 
+            <Route path="Kambaz/Courses/:cid/Assignments/new" element={ <ProtectedRoute> <AssignmentEditor 
             /> </ProtectedRoute>
             } />
+            <Route path="Kambaz/Courses/:cid/Assignments/:aid" element={
+  <ProtectedRoute>
+    <AssignmentEditor />
+  </ProtectedRoute>
+} />
+
 
             <Route path="Courses/:cid/*" element={<ProtectedRoute> <Courses courses={courses} /></ProtectedRoute>} />
               <Route path="/Calendar" element={<h1>Calendar</h1>} />
