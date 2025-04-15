@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Container, Form, Row, Col } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
+//import { v4 as uuidv4 } from "uuid";
 import * as assignmentClient from "./client";
 
 export default function AssignmentEditor() {
@@ -10,7 +10,7 @@ export default function AssignmentEditor() {
 
   //uuidv4
   const [assignment, setAssignment] = useState<any>({
-    _id: uuidv4(), title: "", description: "", points: "100", due: "", available: "", availableUntil: "", course: cid, module: "Multiple Modules",
+     title: "", description: "", points: "100", due: "", available: "", availableUntil: "", course: cid, module: "Multiple Modules",
   });
 
   useEffect(() => {
