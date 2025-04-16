@@ -668,7 +668,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { addCourse } from "./Courses/courseReducer";
 import { Card, FormControl, Button } from "react-bootstrap";
-import EnrollmentButtonUpdated from "./Enrollments/EnrollmentButton";
+//import EnrollmentButtonUpdated from "./Enrollments/EnrollmentButton";
 import { useNavigate } from "react-router-dom";
 
 
@@ -780,9 +780,9 @@ export default function Dashboard({
                     {course.description}
                   </Card.Text>
 
-                  {isStudentTrue ? (
+                  {/* {isStudentTrue ? (
                     <EnrollmentButtonUpdated courseId={course._id} isEnrolled={(course._id)} currentUser={currentUser} />
-                  ): null}
+                  ): null} */}
 
                   {isFacultyTrue ? (
                     <>
