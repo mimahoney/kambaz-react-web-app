@@ -80,7 +80,8 @@ export default function Assignments() {
     <AssignmentControl />
           </div>
           <ListGroup className="wd-lessons rounded-0 assignment-item">
-            {Array.isArray(assignments) && assignments.map((assignment) => (
+            {Array.
+            isArray(assignments) && assignments.map((assignment) => (
                 <ListGroup.Item key={assignment._id} className="wd-lesson p-3 ps-1">
                   <BsGripVertical className="me-2 fs-3" />
                   <Link
@@ -90,7 +91,7 @@ export default function Assignments() {
                   <div className="d-flex align-items-center justify-content-between">
                     <span className="text-muted">
                       <span className="text-danger">{assignment.module}</span> |
-                      <b>Not available until</b> {assignment.available} | <b>Due</b> {assignment.due} | {assignment.points || 0} pts
+                      <b>Not available until</b> {assignment.available} | <b>Due</b> {assignment.due} | {assignment.points} pts
                     </span>
                     <Button variant="danger" onClick={() => deleteAssignment(assignment._id)}>
                       <FaTrash />
