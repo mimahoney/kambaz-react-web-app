@@ -1,0 +1,109 @@
+import { useEffect, useState } from "react";
+import { Button, Form, Row, Col } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import * as questionClient from "./client-questions.ts";
+
+export default function MultipleChoiceEditor() {
+  const { q_id } = useParams(); 
+  const navigate = useNavigate();
+
+  const initial = {
+    q_id: uuidv4(),
+    qtitle: "",
+    points: 0,
+    question_text: "",
+    answers: [
+      { text: "", isCorrect: false },
+      { text: "", isCorrect: false },
+      { text: "", isCorrect: false },
+      { text: "", isCorrect: false },
+    ],
+  };
+
+  const [question, setQuestion] = useState(initial);
+  const [questions, setQuestions] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+    const quizQuestions = await questionClient.findQuestionsForQuiz(q_id!);
+     if (Array.isArray(quizQuestions)) {
+        setQuestions(quizQuestions);
+        } else {
+          console.error("Expected an array but got:", quizQuestions);
+          setQuestions([]);
+        }
+    };
+    fetchQuestions();
+  }, [q_id]);
+
+  return (
+
+    <Form className="p-3 border rounded bg-white">
+      <Form.Group className="mb-3">
+        <Form.Label>Question Title</Form.Label>
+        <Form.Control
+          type="text"
+          value={question.title}
+          onChange={(e) => setQuestion({ ...question, title: e.target.value })}
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Label>Points</Form.Label>
+        <Form.Control
+          type="number"
+          value={question.points}
+          onChange={(e) => setQuestion({ ...question, points: Number(e.target.value) })}
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Label>Question</Form.Label>
+        <ReactQuill
+          value={question.text}
+          onChange={(value) => setQuestion({ ...question, text: value })}
+        />
+      </Form.Group>
+
+      <Form.Label>Answers</Form.Label>
+      {question.answers.map((answer, index) => (
+        <Row key={index} className="mb-2 align-items-center">
+          <Col xs="auto">
+            <Form.Check
+              type="radio"
+              name="correctAnswer"
+              checked={choice.isCorrect}
+              onChange={() => setCorrectAnswer(index)}
+            />
+          </Col>
+          <Col>
+            <Form.Control
+              placeholder={`Add Answer Here`} value={choice.text} onChange={(e) => updateChoice(index, "text", e.target.value)}
+            />
+          </Col>
+          <Col xs="auto">
+            <Button variant="outline-danger" onClick={() => removeChoice(index)}>
+              Delete
+            </Button>
+          </Col>
+        </Row>
+      ))}
+
+      <Button variant="link" onClick={addChoice} className="mb-3">
+        + Add Additional Answer
+      </Button>
+
+      <div className="d-flex gap-2">
+        <Button variant="outline-secondary" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button variant="danger" onClick={handleSave}>
+          Update Question
+        </Button>
+      </div>
+    </Form>
+  );
+}

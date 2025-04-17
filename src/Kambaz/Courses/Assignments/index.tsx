@@ -13,6 +13,7 @@ import { FaTrash } from "react-icons/fa";
 import { ListGroup } from "react-bootstrap";
 
 
+
 export default function Assignments() {
     const { cid } = useParams();
     const n = useNavigate();
@@ -41,7 +42,7 @@ export default function Assignments() {
           }
         } catch (err) {
           console.error("Failed to fetch assignments:", err);
-          setAssignments([]); // fallback to empty array
+          setAssignments([]); 
         }
       };
       fetchAssignments();

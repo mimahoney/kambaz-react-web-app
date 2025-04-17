@@ -7,6 +7,7 @@ import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import { FaAlignJustify } from "react-icons/fa"
 import PeopleTable from "./People/Table"
+
 //changes
 import * as client from "../Enrollments/client";
 import { useEffect, useState } from "react";

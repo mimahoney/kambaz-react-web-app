@@ -73,9 +73,16 @@ export default function Quizzes() {
           >
             + Group
           </Button>
-          <Button size="lg" className="me-1 float-end" id="wd-add-quiz" variant="danger" onClick={() => n(`/Kambaz/Courses/${cid}/Quizzes/new`)}>
-            + Quiz
-          </Button>
+          
+          <Button
+             size="lg"
+             className="me-1 float-end"
+             id="wd-add-quiz"
+             variant="danger"
+             onClick={() => n(`/Kambaz/Courses/${cid}/Quizzes/new`)}
+           > 
+           + Quiz
+           </Button>
         </div>
       </div>
 
