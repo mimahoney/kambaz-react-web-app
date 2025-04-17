@@ -4,14 +4,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import * as questionClient from "./client-questions.ts";
-
+import * as questionClient from "./client";
 export default function MultipleChoiceEditor() {
-  const { q_id } = useParams(); 
-  const navigate = useNavigate();
+  const { qid, cid } = useParams(); //btw qid is quiz id, cid is course id!!!!
+  const n = useNavigate();
 
   const initial = {
-    q_id: uuidv4(),
+    _id: uuidv4(),
     qtitle: "",
     points: 0,
     question_text: "",
@@ -26,9 +25,40 @@ export default function MultipleChoiceEditor() {
   const [question, setQuestion] = useState(initial);
   const [questions, setQuestions] = useState<any[]>([]);
 
+  const deleteAnswer = (index: any) => {
+    if (window.confirm("Are you sure you'd like to delete this answer?")) {
+      const updated = question.answers.filter((_, i) => i !== index);
+      setQuestion({ ...question, answers: updated });
+    }
+  };
+
+  const saveQuestion = async () => {
+    await questionClient.createQuestionForQuiz(qid!, question);
+    setQuestions([...questions, question]);
+    n(`/Kambaz/Courses/${cid}/Quizzes/${qid}`);
+  };
+
+  const addAnswer = () => {
+    setQuestion({...question, answers: [...question.answers, { text: "", isCorrect: false }],});
+  };
+
+  const updateAnswer = (index: number, field: "text", value: string) => {
+    const updated = [...question.answers];
+    updated[index][field] = value;
+    setQuestion({ ...question, answers: updated });
+  };
+  
+  const setCorrectAnswer = (index: number) => {
+    const updated = question.answers.map((choice, i) => ({
+      ...choice,
+      isCorrect: i === index,
+    }));
+    setQuestion({ ...question, answers: updated });
+  };
+
   useEffect(() => {
     const fetchQuestions = async () => {
-    const quizQuestions = await questionClient.findQuestionsForQuiz(q_id!);
+    const quizQuestions = await questionClient.findQuestionsForQuiz(qid!);
      if (Array.isArray(quizQuestions)) {
         setQuestions(quizQuestions);
         } else {
@@ -36,18 +66,17 @@ export default function MultipleChoiceEditor() {
           setQuestions([]);
         }
     };
-    fetchQuestions();
-  }, [q_id]);
+    fetchQuestions();}, [qid]);
 
   return (
 
-    <Form className="p-3 border rounded bg-white">
+    <Form className="p-3">
       <Form.Group className="mb-3">
         <Form.Label>Question Title</Form.Label>
         <Form.Control
           type="text"
-          value={question.title}
-          onChange={(e) => setQuestion({ ...question, title: e.target.value })}
+          value={question.qtitle}
+          onChange={(e) => setQuestion({ ...question, qtitle: e.target.value })}
         />
       </Form.Group>
 
@@ -63,44 +92,45 @@ export default function MultipleChoiceEditor() {
       <Form.Group className="mb-3">
         <Form.Label>Question</Form.Label>
         <ReactQuill
-          value={question.text}
-          onChange={(value) => setQuestion({ ...question, text: value })}
+          value={question.question_text}
+          onChange={(value) => setQuestion({ ...question, question_text: value })}
         />
       </Form.Group>
 
       <Form.Label>Answers</Form.Label>
       {question.answers.map((answer, index) => (
         <Row key={index} className="mb-2 align-items-center">
-          <Col xs="auto">
+          <Col >
             <Form.Check
               type="radio"
               name="correctAnswer"
-              checked={choice.isCorrect}
+              checked={answer.isCorrect}
               onChange={() => setCorrectAnswer(index)}
             />
           </Col>
           <Col>
             <Form.Control
-              placeholder={`Add Answer Here`} value={choice.text} onChange={(e) => updateChoice(index, "text", e.target.value)}
+              placeholder={`Add Answer Here`} value={answer.text} onChange={(e) => updateAnswer(index, "text", e.target.value)}
             />
           </Col>
-          <Col xs="auto">
-            <Button variant="outline-danger" onClick={() => removeChoice(index)}>
+          <Col >
+            <Button variant="outline-danger" onClick={() => deleteAnswer(index)}>
               Delete
             </Button>
           </Col>
         </Row>
       ))}
 
-      <Button variant="link" onClick={addChoice} className="mb-3">
+      <Button variant="link" onClick={addAnswer} className="mb-3">
         + Add Additional Answer
       </Button>
 
       <div className="d-flex gap-2">
-        <Button variant="outline-secondary" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button variant="danger" onClick={handleSave}>
+      <Button variant="outline-secondary" onClick={() => n(`/Kambaz/Courses/${cid}/Quizzes/${qid}`)}>
+        Cancel
+    </Button>
+
+        <Button variant="danger" onClick={saveQuestion}>
           Update Question
         </Button>
       </div>
