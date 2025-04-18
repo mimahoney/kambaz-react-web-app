@@ -26,6 +26,7 @@ import { useState, useEffect } from "react";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import AssignmentEditor from "./Courses/Assignments/Editor";
 import axios from "axios";
+
 axios.defaults.withCredentials = true;
 
 
@@ -74,6 +75,8 @@ export default function Kambaz() {
     fetchCourses();
   }, [currentUser]);
 
+  
+
 
 
   return (
@@ -97,12 +100,10 @@ export default function Kambaz() {
               deleteCourse={deleteCourse}
               updateCourse={updateCourse}/></ProtectedRoute>
           } />
-
-
-
             <Route path="Courses/:cid/Assignments/new" element={ <ProtectedRoute> <AssignmentEditor 
             /> </ProtectedRoute>
             } />
+              
 
             <Route path="Courses/:cid/*" element={<ProtectedRoute> <Courses courses={courses} /></ProtectedRoute>} />
               <Route path="/Calendar" element={<h1>Calendar</h1>} />

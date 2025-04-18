@@ -6,10 +6,12 @@ import * as quizClient from "./client.ts";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-export default function AssignmentEditor() {
+export default function QuizEditor() {
   const { qid, cid } = useParams();
   const navigate = useNavigate();
-  const [key, setKey] = useState("details"); // <-- Fix: missing key state
+  const [key, setKey] = useState("details"); 
+  const [questionType, setQuestionType] = useState("multipleChoice");
+
 
   const [quiz, setQuiz] = useState<any>({
     _id: uuidv4(),
@@ -148,7 +150,25 @@ export default function AssignmentEditor() {
           </Tab>
 
           <Tab eventKey="questions" title="Questions">
-
+          <Form.Group className="mb-3 mt-3">
+            <Form.Label>Question Type</Form.Label>
+            <Form.Select
+              value={questionType}
+              onChange={(e) => setQuestionType(e.target.value)}
+            >
+              <option value="mcq">Multiple Choice</option>
+              <option value="tf">True/False</option>
+              <option value="fitb">Fill in the Blank</option>
+            </Form.Select>
+          </Form.Group>
+          <Button
+            variant="danger"
+            onClick={() =>
+              navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/new/${questionType}`)
+            }
+          >
+            Add New Question
+          </Button>
           </Tab>
 
         </Tabs>

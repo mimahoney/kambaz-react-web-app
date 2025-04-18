@@ -1,20 +1,20 @@
 import axios from "axios";
 
 const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
-const COURSES_API = `${REMOTE_SERVER}/api/courses`;
-const QUESTION_API = `${REMOTE_SERVER}/api/quizzes/${quizId}/questions`;
+const QUIZZES_API = `${REMOTE_SERVER}/api/quizzes`;
 
-export const findQuestionsForQuiz = async (courseId: string) => {
-  const response = await axios.get(`${COURSES_API}/${courseId}/questions`);
+export const findQuestionsForQuiz = async (quizId: string) => {
+  const response = await axios.get(`${QUIZZES_API}/${quizId}/questions`);
   return response.data;
 };
 
-export const createQuestionForQuiz = async (courseId: string, question: any) => {
-  const response = await axios.post(`api/courses/${courseId}/questions`, question);
+
+export const createQuestionForQuiz = async (quizId: string, question: any) => {
+  const response = await axios.post(`${QUIZZES_API}/${quizId}/questions`, question);
   return response.data;
 };
 
-export const deleteQuizQuestion = async (questionId: string) => {
-  const response = await axios.delete(`${QUESTION_API}/questions/${questionId}`);
+export const deleteQuizQuestion = async (quizId: string, questionId: string) => {
+  const response = await axios.delete(`${QUIZZES_API}/${quizId}/questions/${questionId}`);
   return response.data;
 };
