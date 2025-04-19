@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import MultipleChoiceEditor from "./Questions/MCQ_Question";
 import TrueFalseEditor from "./Questions/TF_Question";
-// import FillInTheBlankEditor from "./Questions/FITB_Question";
+import FillInTheBlankEditor from "./Questions/FITB_Question";
 
 export default function QuestionRouter() {
   const { type } = useParams();
@@ -12,8 +12,11 @@ export default function QuestionRouter() {
       return <MultipleChoiceEditor />;
     case "tf":
         console.log("Rendering <TrueFalseEditor />");
+        return <FillInTheBlankEditor />;
+    case "fitb":
+          console.log("Rendering <FillInTheBlankEditor />");
 
-      return <TrueFalseEditor />;
+      return <FillInTheBlankEditor />;
     // case "fitb":
     //   return <FillInTheBlankEditor />;
     default:

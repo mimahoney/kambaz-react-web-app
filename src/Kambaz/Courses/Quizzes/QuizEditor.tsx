@@ -81,7 +81,7 @@ export default function QuizEditor() {
         navigate(`/Kambaz/Courses/${cid}/Quizzes`);
       }
     } catch (err) {
-      console.error("❗ Failed to save and publish quiz:", err);
+      console.error("Failed to save and publish quiz:", err);
       alert("Could not save and publish quiz.");
     }
   };
