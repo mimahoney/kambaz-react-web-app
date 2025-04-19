@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Container, Form, Row, Col, Tabs, Tab } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import * as quizClient from "./client.ts";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -10,11 +10,11 @@ export default function QuizEditor() {
   const { qid, cid } = useParams();
   const navigate = useNavigate();
   const [key, setKey] = useState("details"); 
-  const [questionType, setQuestionType] = useState("multipleChoice");
+  const [questionType, setQuestionType] = useState("mcq");
 
 
   const [quiz, setQuiz] = useState<any>({
-    _id: uuidv4(),
+    // _id: uuidv4(),
     title: "",
     description: "",
     quizType: "Graded Quiz",
@@ -32,6 +32,7 @@ export default function QuizEditor() {
     available: "",
     availableUntil: "",
     course: cid,
+    published: false,
   });
 
   useEffect(() => {
@@ -46,18 +47,36 @@ export default function QuizEditor() {
 
   const save = async () => {
     if (qid === "new") {
-      await quizClient.createQuizForCourse(cid!, quiz);
-      navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}`);
+      const created = await quizClient.createQuizForCourse(cid!, quiz);
+      setQuiz(created); 
+      navigate(`/Kambaz/Courses/${cid}/Quizzes/${created._id}`);
     } else {
       await quizClient.updateQuiz(quiz);
       navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}`);
     }
   };
+  
 
   const saveAndPublish = async () => {
-    await save();
-    navigate(`/Kambaz/Courses/${cid}/Quizzes`);
+    try {
+      console.log("Save and Publish called");
+  
+      const updatedQuiz = { ...quiz, published: true };
+  
+      if (qid === "new") {
+        const ex = await quizClient.createQuizForCourse(cid!, updatedQuiz);
+        console.log("Created quiz:", ex);
+        navigate(`/Kambaz/Courses/${cid}/Quizzes/${ex._id}`);
+      } else {
+        await quizClient.updateQuiz(updatedQuiz);
+        navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}`);
+      }
+    } catch (err) {
+      console.error("Failed to save and publish quiz:", err);
+    }
   };
+  
+  
 
   const u = (key: string) => (e: any) =>
     setQuiz({ ...quiz, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value });
