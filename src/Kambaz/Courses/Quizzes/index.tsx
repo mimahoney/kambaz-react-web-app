@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button, ListGroup, Dropdown } from "react-bootstrap";
 import { BsGripVertical, BsThreeDotsVertical } from "react-icons/bs";
 import { CiSearch } from "react-icons/ci";
@@ -10,6 +10,7 @@ import QuizControl from "./QuizControl";
 export default function Quizzes() {
   const { cid } = useParams();
   const n = useNavigate();
+  const location = useLocation(); 
   const [quizzes, setQuizzes] = useState<any[]>([]);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export default function Quizzes() {
       }
     };
     fetchQuizzes();
-  }, [cid]);
+  }, [cid, location.key]); 
 
   const deleteQuiz = async (quizId: string) => {
     if (window.confirm("Are you sure you'd like to delete?")) {
@@ -73,16 +74,16 @@ export default function Quizzes() {
           >
             + Group
           </Button>
-          
+
           <Button
-             size="lg"
-             className="me-1 float-end"
-             id="wd-add-quiz"
-             variant="danger"
-             onClick={() => n(`/Kambaz/Courses/${cid}/Quizzes/new`)}
-           > 
-           + Quiz
-           </Button>
+            size="lg"
+            className="me-1 float-end"
+            id="wd-add-quiz"
+            variant="danger"
+            onClick={() => n(`/Kambaz/Courses/${cid}/Quizzes/new`)}
+          >
+            + Quiz
+          </Button>
         </div>
       </div>
 
