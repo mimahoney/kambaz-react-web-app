@@ -16,6 +16,7 @@ export default function QuizPreview() {
   useEffect(() => {
     const loadData = async () => {
       if (qid) {
+        console.log("🧪 QuizPreview loaded with qid:", qid);
         const q = await quizClient.findQuiz(qid);
         const qs = await quizClient.findQuestionsForQuiz(qid);
         setQuiz(q);
@@ -29,7 +30,7 @@ export default function QuizPreview() {
     setAnswers({ ...answers, [id]: value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let total = 0;
     for (let q of questions) {
       const a = answers[q._id];
@@ -44,28 +45,39 @@ export default function QuizPreview() {
         }
       }
     }
+
     setScore(total);
     setSubmitted(true);
+
+    try {
+      console.log("🔍 Submitting attempt:", { qid, score: total });
+      await quizClient.submitAttempt(qid!, total);
+      const updatedQuiz = await quizClient.findQuiz(qid!);
+      setQuiz(updatedQuiz);
+      console.log("Attempt submitted successfully");
+    } catch (err) {
+      console.error("Error submitting attempt:", err);
+    }
   };
 
   if (!quiz) return <div>Loading...</div>;
 
+  const usedAttempts = quiz.attempts?.length || 0;
+  const maxAllowed = quiz.maxAttempts ?? Infinity;
+  const canRetry = quiz.multipleAttempts && usedAttempts < maxAllowed;
+
   return (
     <Container className="p-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2>{quiz.title}</h2>
+        <div>
+          <h2>{quiz.title}</h2>
+          <p>{quiz.description}</p>
+          <p className="text-muted">Quiz ID: <code>{quiz._id}</code></p>
+        </div>
         <Button onClick={() => navigate(`/Kambaz/Courses/${cid}/Quizzes/${qid}`)}>
           Edit Quiz
         </Button>
       </div>
-
-      <p>{quiz.description}</p>
-
-      {submitted && (
-       <div>
-          <strong>{score}</strong> / <strong>{quiz.points}</strong> points.
-          </div>
-      )}
 
       {questions.map((q, idx) => (
         <div key={q._id} className="border rounded p-3 mb-3">
@@ -141,116 +153,56 @@ export default function QuizPreview() {
         </div>
       ))}
 
-      {!submitted && (
+      {submitted ? (
+        <div className="mt-3">
+          <Alert variant="info">
+            You scored <strong>{score}</strong> / {quiz.points} points.
+          </Alert>
+
+          <p>
+            Attempts used: <strong>{usedAttempts}</strong> /{" "}
+            {maxAllowed === Infinity ? "∞" : maxAllowed}
+          </p>
+
+          {canRetry ? (
+            <Button
+              variant="warning"
+              onClick={() => {
+                setAnswers({});
+                setSubmitted(false);
+                setScore(0);
+              }}
+            >
+              Re-Attempt Quiz
+            </Button>
+          ) : (
+            <Alert variant="warning" className="mt-3">
+              You’ve reached the maximum number of attempts.
+            </Alert>
+          )}
+        </div>
+      ) : (
         <Button variant="success" onClick={handleSubmit}>
           Submit Preview
         </Button>
       )}
+
+      {quiz.attempts?.length > 0 && (
+        <div className="mt-5">
+          <h4>📜 Attempt History</h4>
+          <ul className="list-group">
+            {quiz.attempts.map((a: any, i: number) => (
+              <li key={a._id} className="list-group-item d-flex justify-content-between">
+                <span>Attempt {i + 1}</span>
+                <span>
+                  <strong>{a.score}</strong> pts on{" "}
+                  {new Date(a.submittedAt).toLocaleString()}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </Container>
   );
 }
-
-
-
-// import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import * as quizClient from "./client";
-// import { Button, Form, Container } from "react-bootstrap";
-
-// export default function QuizPreview() {
-//   const { qid, cid } = useParams();
-//   const [quiz, setQuiz] = useState<any>(null);
-//   const [questions, setQuestions] = useState<any[]>([]);
-//   const [answers, setAnswers] = useState<Record<string, any>>({});
-
-//   useEffect(() => {
-//     const loadQuizData = async () => {
-//       if (qid) {
-//         const quizData = await quizClient.findQuiz(qid);
-//         const quizQuestions = await quizClient.findQuestionsForQuiz(qid);
-//         setQuiz(quizData);
-//         setQuestions(quizQuestions);
-//       }
-//     };
-//     loadQuizData();
-//   }, [qid]);
-
-//   const handleChange = (qid: string, value: any) => {
-//     setAnswers({ ...answers, [qid]: value });
-//   };
-
-//   const handleSubmit = () => {
-//     console.log("Submitted Answers:", answers);
-//     alert("Quiz submitted");
-//     // Optional: send to backend
-//   };
-
-//   return (
-//     <Container className="p-4">
-//       {!quiz ? (
-//         <div>Loading...</div>
-//       ) : (
-//         <>
-//           <h2>{quiz.title}</h2>
-//           <p>{quiz.description}</p>
-  
-//           {questions.map((q, n) => (
-//             <div key={q._id} className="border p-3 my-3 rounded bg-light">
-//               <h5>{n + 1}. {q.qtitle}</h5>
-//               <div dangerouslySetInnerHTML={{ __html: q.question_text }} />
-  
-//               {q.type === "mcq" && (
-//                 <Form.Group className="mt-2">
-//                   {q.answers.map((a: any, idx: number) => (
-//                     <Form.Check
-//                       key={idx}
-//                       type="radio"
-//                       label={a.text}
-//                       name={q._id}
-//                       checked={answers[q._id] === idx}
-//                       onChange={() => handleChange(q._id, idx)}
-//                     />
-//                   ))}
-//                 </Form.Group>
-//               )}
-  
-//               {q.type === "tf" && (
-//                 <Form.Group className="mt-2">
-//                   <Form.Check
-//                     type="radio"
-//                     label="True"
-//                     name={q._id}
-//                     checked={answers[q._id] === true}
-//                     onChange={() => handleChange(q._id, true)}
-//                   />
-//                   <Form.Check
-//                     type="radio"
-//                     label="False"
-//                     name={q._id}
-//                     checked={answers[q._id] === false}
-//                     onChange={() => handleChange(q._id, false)}
-//                   />
-//                 </Form.Group>
-//               )}
-  
-//               {q.type === "fitb" && (
-//                 <Form.Group className="mt-2">
-//                   <Form.Control
-//                     placeholder="Type your answer..."
-//                     value={answers[q._id] || ""}
-//                     onChange={(e) => handleChange(q._id, e.target.value)}
-//                   />
-//                 </Form.Group>
-//               )}
-  
-//             </div>
-//           ))}
-  
-//           <Button variant="success" onClick={handleSubmit}>
-//             Submit Quiz
-//           </Button>
-//         </>
-//       )}
-//     </Container>
-//   );
-//               }  
