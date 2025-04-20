@@ -12,6 +12,7 @@ export default function MultipleChoiceEditor() {
 
   const initial = {
     _id: uuidv4(),
+    qid: "",
     qtitle: "",
     points: 0,
     question_text: "",
@@ -21,6 +22,7 @@ export default function MultipleChoiceEditor() {
       { text: "", isCorrect: false },
       { text: "", isCorrect: false },
     ],
+    type: "mcq",
   };
 
   const [question, setQuestion] = useState(initial);

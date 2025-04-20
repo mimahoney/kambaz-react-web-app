@@ -40,3 +40,13 @@ export const findQuizzesForCourse = async (courseId: string) => {
   const response = await axios.get(`${COURSES_API}/${courseId}/quizzes`);
   return response.data;
 };
+
+export const findQuestionsForQuiz = async (qid: string) => {
+  const res = await axios.get(`${QUIZZES_API}/${qid}/questions`);
+  return res.data;
+};
+
+export const deleteQuestion = async (qid: string, questionId: string) => {
+  await axios.delete(`${QUIZZES_API}/${qid}/questions/${questionId}`);
+};
+

@@ -6,16 +6,18 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import * as questionClient from "./client";
 
-export default function MultipleChoiceEditor() {
-  const { qid, cid } = useParams(); //btw qid is quiz id, cid is course id!!!!
+export default function TrueFalseEditor() {
+  const { qid, cid } = useParams();
   const n = useNavigate();
 
   const initial = {
     _id: uuidv4(),
+    qid: "",
     qtitle: "",
     points: 0,
     question_text: "",
     answer: false,
+    type: "tf",
   };
 
   const [question, setQuestion] = useState(initial);

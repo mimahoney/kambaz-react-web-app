@@ -6,7 +6,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 export default function QuizEditor() {
-  const { quizId, cid } = useParams();
+  const { qid, cid } = useParams();
   const navigate = useNavigate();
   const [key, setKey] = useState("details");
   const [questionType, setQuestionType] = useState("mcq");
@@ -34,17 +34,17 @@ export default function QuizEditor() {
 
   useEffect(() => {
     const loadQuiz = async () => {
-      if (quizId && quizId !== "new") {
-        const existing = await quizClient.findQuiz(quizId);
+      if (qid && qid !== "new") {
+        const existing = await quizClient.findQuiz(qid);
         setQuiz(existing);
       }
     };
     loadQuiz();
-  }, [quizId]);
+  }, [qid]);
 
   const save = async () => {
     try {
-      if (quizId === "new") {
+      if (qid === "new") {
         const created = await quizClient.createQuizForCourse(cid!, quiz);
         console.log("Created quiz:", created);
         if (created?._id) {
@@ -54,8 +54,9 @@ export default function QuizEditor() {
           console.error("Quiz creation failed or ID missing:", created);
         }
       } else {
-        await quizClient.updateQuiz(quiz);
-        navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}`);
+        const updated = await quizClient.updateQuiz(quiz);
+        setQuiz(updated); 
+        navigate(`/Kambaz/Courses/${cid}/Quizzes`);
       }
     } catch (err) {
       console.error("Error saving quiz:", err);
@@ -66,7 +67,7 @@ export default function QuizEditor() {
     try {
       const updatedQuiz = { ...quiz, published: true };
   
-      if (quizId === "new") {
+      if (qid === "new") {
         const created = await quizClient.createQuizForCourse(cid!, updatedQuiz);
         console.log("Created and published quiz:", created);
   
@@ -76,8 +77,9 @@ export default function QuizEditor() {
           alert("Something went wrong creating the quiz!");
         }
       } else {
-        await quizClient.updateQuiz(updatedQuiz);
-        console.log("Updated and published quiz:", updatedQuiz);
+        const updated = await quizClient.updateQuiz(quiz);
+        setQuiz(updated); 
+        // navigate(`/Kambaz/Courses/${cid}/Quizzes/${updated._id}`);
         navigate(`/Kambaz/Courses/${cid}/Quizzes`);
       }
     } catch (err) {
@@ -86,6 +88,33 @@ export default function QuizEditor() {
     }
   };
   
+  const handleAddQuestion = async () => {
+    if (!quiz._id || qid === "new") {
+      const created = await quizClient.createQuizForCourse(cid!, quiz);
+      setQuiz(created);
+      navigate(`/Kambaz/Courses/${cid}/Quizzes/${created._id}/new/${questionType}`);
+    } else {
+      navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/new/${questionType}`);
+    }
+  };
+  
+  const [questions, setQuestions] = useState<any[]>([]);
+
+useEffect(() => {
+  const loadQuestions = async () => {
+    if (qid) {
+      const res = await quizClient.findQuestionsForQuiz(qid);
+      setQuestions(res);
+    }
+  };
+  loadQuestions();
+}, [qid]);
+
+const handleDelete = async (qid: string) => {
+  await quizClient.deleteQuestion(quiz._id, qid);
+  setQuestions(questions.filter(q => q._id !== qid));
+};
+
   
   
 
@@ -108,7 +137,7 @@ export default function QuizEditor() {
             <Form.Control
               className="mb-2"
               id="title"
-              value={quiz.title}
+              value={quiz.title ?? ""}
               onChange={u("title")}
             />
 
@@ -255,7 +284,8 @@ export default function QuizEditor() {
             </div>
           </Tab>
 
-          <Tab eventKey="questions" title="Questions">
+          {/* <Tab eventKey="questions" title="Questions">
+            <div></div>
             <Form.Group className="mb-3 mt-3">
               <Form.Label>Question Type</Form.Label>
               <Form.Select
@@ -269,13 +299,75 @@ export default function QuizEditor() {
             </Form.Group>
             <Button
               variant="danger"
-              onClick={() =>
-                navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/new/${questionType}`)
-              }
+              onClick={handleAddQuestion}
             >
               Add New Question
             </Button>
-          </Tab>
+          </Tab> */}
+
+<Tab eventKey="questions" title="Questions">
+  <Form.Group className="mb-3 mt-3">
+    <Form.Label>Question Type</Form.Label>
+    <Form.Select
+      value={questionType}
+      onChange={(e) => setQuestionType(e.target.value)}
+    >
+      <option value="mcq">Multiple Choice</option>
+      <option value="tf">True/False</option>
+      <option value="fitb">Fill in the Blank</option>
+    </Form.Select>
+  </Form.Group>
+
+  <Button variant="danger" onClick={handleAddQuestion} className="mb-4">
+    Add New Question
+  </Button>
+
+  {questions.length === 0 && (
+    <div className="text-muted">No questions added yet.</div>
+  )}
+
+  {questions.map((q, i) => (
+    <div key={q._id} className="border rounded p-3 mb-3 bg-light">
+      <h5 className="text-dark">{q.qtitle || `Question ${i + 1}`}</h5>
+      <div dangerouslySetInnerHTML={{ __html: q.question_text }} />
+      <div className="mt-2">
+        <strong>Points:</strong> {q.points}
+      </div>
+
+      {q.type === "mcq" && (
+        <ul className="mt-2">
+          {q.answers.map((a: any, idx: any) => (
+            <li key={idx}>
+              {a.text} {a.isCorrect && <strong>(✔ correct)</strong>}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {q.type === "tf" && (
+        <div className="mt-2">
+          <strong>Correct Answer:</strong> {q.answer ? "True" : "False"}
+        </div>
+      )}
+
+      {q.type === "fitb" && (
+        <div className="mt-2">
+          <strong>Correct Answer:</strong> {q.answer}
+        </div>
+      )}
+
+      <Button
+        variant="outline-danger"
+        size="sm"
+        onClick={() => handleDelete(q._id)}
+        className="mt-3"
+      >
+        Delete
+      </Button>
+    </div>
+  ))}
+</Tab>
+
         </Tabs>
       </div>
     </Container>

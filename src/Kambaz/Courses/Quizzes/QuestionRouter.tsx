@@ -12,7 +12,7 @@ export default function QuestionRouter() {
       return <MultipleChoiceEditor />;
     case "tf":
         console.log("Rendering <TrueFalseEditor />");
-        return <FillInTheBlankEditor />;
+        return <TrueFalseEditor />;
     case "fitb":
           console.log("Rendering <FillInTheBlankEditor />");
 
