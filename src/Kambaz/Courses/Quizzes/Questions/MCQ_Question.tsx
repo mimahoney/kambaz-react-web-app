@@ -72,7 +72,7 @@ export default function MultipleChoiceEditor() {
   const saveQuestion = async () => {
     await questionClient.createQuestionForQuiz(qid!, question);
     setQuestions([...questions, question]);
-    navigate(`/Kambaz/Courses/${cid}/Quizzes/${qid}`);
+    navigate(`/Kambaz/Courses/${cid}/Quizzes`);
   };
 
   return (

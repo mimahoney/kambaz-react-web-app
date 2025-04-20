@@ -110,9 +110,20 @@ useEffect(() => {
   loadQuestions();
 }, [qid]);
 
-const handleDelete = async (qid: string) => {
-  await quizClient.deleteQuestion(quiz._id, qid);
-  setQuestions(questions.filter(q => q._id !== qid));
+// const handleDelete = async (qid: string) => {
+//   await quizClient.deleteQuestion(quiz._id, qid);
+//   setQuestions(questions.filter(q => q._id !== qid));
+// };
+
+const handleDelete = async (questionId: string) => {
+  const confirmDelete = window.confirm("Are you sure you'd like to delete this question?");
+  if (!confirmDelete) return;
+  try {
+    await quizClient.deleteQuestion(quiz._id, questionId);
+    setQuestions(questions.filter((q) => q._id !== questionId));
+  } catch (err) {
+    console.error(" Failed to delete question:", err);
+  }
 };
 
   
@@ -331,14 +342,14 @@ const handleDelete = async (qid: string) => {
       <h5 className="text-dark">{q.qtitle || `Question ${i + 1}`}</h5>
       <div dangerouslySetInnerHTML={{ __html: q.question_text }} />
       <div className="mt-2">
-        <strong>Points:</strong> {q.points}
+        Points: {q.points}
       </div>
 
       {q.type === "mcq" && (
         <ul className="mt-2">
           {q.answers.map((a: any, idx: any) => (
             <li key={idx}>
-              {a.text} {a.isCorrect && <strong>(✔ correct)</strong>}
+              {a.text} {a.isCorrect && <p>(correct answer)</p>}
             </li>
           ))}
         </ul>
@@ -346,13 +357,13 @@ const handleDelete = async (qid: string) => {
 
       {q.type === "tf" && (
         <div className="mt-2">
-          <strong>Correct Answer:</strong> {q.answer ? "True" : "False"}
+          Correct Answer is:{q.answer ? "True" : "False"}
         </div>
       )}
 
       {q.type === "fitb" && (
         <div className="mt-2">
-          <strong>Correct Answer:</strong> {q.answer}
+          Correct Answe is: {q.answer}
         </div>
       )}
 
