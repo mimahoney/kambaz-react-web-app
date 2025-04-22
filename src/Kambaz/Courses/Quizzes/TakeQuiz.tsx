@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import * as quizClient from "./client";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 
-export default function QuizPreview() {
-  const { qid, cid } = useParams();
-  const navigate = useNavigate();
-
+export default function TakeQuiz() {
+  const { qid } = useParams();
   const [quiz, setQuiz] = useState<any>(null);
   const [questions, setQuestions] = useState<any[]>([]);
   const [answers, setAnswers] = useState<any>({});
@@ -16,7 +14,6 @@ export default function QuizPreview() {
   useEffect(() => {
     const loadData = async () => {
       if (qid) {
-        console.log("🧪 QuizPreview loaded with qid:", qid);
         const q = await quizClient.findQuiz(qid);
         const qs = await quizClient.findQuestionsForQuiz(qid);
         setQuiz(q);
@@ -50,11 +47,9 @@ export default function QuizPreview() {
     setSubmitted(true);
 
     try {
-      console.log("Submitting attempt:", { qid, score: total });
       await quizClient.submitAttempt(qid!, total);
-      const updatedQuiz = await quizClient.findQuiz(qid!);
-      setQuiz(updatedQuiz);
-      console.log("Attempt submitted successfully");
+      const updated = await quizClient.findQuiz(qid!);
+      setQuiz(updated);
     } catch (err) {
       console.error("Error submitting attempt:", err);
     }
@@ -64,20 +59,12 @@ export default function QuizPreview() {
 
   const usedAttempts = quiz.attempts?.length || 0;
   const maxAllowed = quiz.maxAttempts ?? Infinity;
-  const canRetry = quiz.multipleAttempts && usedAttempts < maxAllowed;
+  const canRetry = usedAttempts < maxAllowed;
 
   return (
     <Container className="p-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <div>
-          <h2>{quiz.title}</h2>
-          <p>{quiz.description}</p>
-          <p className="text-muted">Quiz ID: <code>{quiz._id}</code></p>
-        </div>
-        <Button onClick={() => navigate(`/Kambaz/Courses/${cid}/Quizzes/${qid}`)}>
-          Edit Quiz
-        </Button>
-      </div>
+      <h2>{quiz.title}</h2>
+      <p>{quiz.description}</p>
 
       {questions.map((q, idx) => (
         <div key={q._id} className="border rounded p-3 mb-3">
@@ -128,42 +115,18 @@ export default function QuizPreview() {
               placeholder="Type your answer"
             />
           )}
-
-          {submitted && (
-            <div className="mt-2">
-              {(() => {
-                const a = answers[q._id];
-                let correct = false;
-                if (q.type === "mcq") {
-                  const correctIdx = q.answers.findIndex((a: any) => a.isCorrect);
-                  correct = a === correctIdx;
-                } else if (q.type === "tf") {
-                  correct = a === q.answer;
-                } else if (q.type === "fitb") {
-                  correct = a?.toLowerCase().trim() === q.answer.toLowerCase().trim();
-                }
-                return (
-                  <span className={correct ? "text-success" : "text-danger"}>
-                    {correct ? "Correct" : `Incorrect (Answer: ${q.type === "mcq" ? q.answers.find((a: any) => a.isCorrect)?.text : q.answer})`}
-                  </span>
-                );
-              })()}
-            </div>
-          )}
         </div>
       ))}
 
-      {submitted ? (
-        <div className="mt-3">
+      {!submitted ? (
+        <Button variant="success" onClick={handleSubmit}>
+          Submit Quiz
+        </Button>
+      ) : (
+        <>
           <Alert variant="info">
             You scored <strong>{score}</strong> / {quiz.points} points.
           </Alert>
-
-          <p>
-            Attempts used: <strong>{usedAttempts}</strong> /{" "}
-            {maxAllowed === Infinity ? "∞" : maxAllowed}
-          </p>
-
           {canRetry ? (
             <Button
               variant="warning"
@@ -180,28 +143,7 @@ export default function QuizPreview() {
               You’ve reached the maximum number of attempts.
             </Alert>
           )}
-        </div>
-      ) : (
-        <Button variant="success" onClick={handleSubmit}>
-          Submit Preview
-        </Button>
-      )}
-
-      {quiz.attempts?.length > 0 && (
-        <div className="mt-5">
-          <h4> Attempt History</h4>
-          <ul className="list-group">
-            {quiz.attempts.map((a: any, i: number) => (
-              <li key={a._id} className="list-group-item d-flex justify-content-between">
-                <span>Attempt {i + 1}</span>
-                <span>
-                  <strong>{a.score}</strong> pts on{" "}
-                  {new Date(a.submittedAt).toLocaleString()}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        </>
       )}
     </Container>
   );
