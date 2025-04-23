@@ -50,7 +50,7 @@ export default function QuizPreview() {
     setSubmitted(true);
 
     try {
-      console.log("Submitting attempt:", { qid, score: total });
+      console.log("🔍 Submitting attempt:", { qid, score: total });
       await quizClient.submitAttempt(qid!, total);
       const updatedQuiz = await quizClient.findQuiz(qid!);
       setQuiz(updatedQuiz);
