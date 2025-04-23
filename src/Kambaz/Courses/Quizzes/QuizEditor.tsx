@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { Button, Container, Form, Row, Col, Tabs, Tab } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import * as quizClient from "./client.ts";
@@ -20,7 +19,7 @@ export default function QuizEditor() {
     assignmentGroup: "Quizzes",
     shuffleAnswers: true,
     timeLimit: 20,
-    maxAttempts: 1,
+    multipleAttempts: false,
     showCorrectAnswers: "",
     accessCode: "",
     oneQuestionAtATime: true,
@@ -31,7 +30,6 @@ export default function QuizEditor() {
     availableUntil: "",
     course: cid,
     published: false,
-    attempts: [],
   });
 
   useEffect(() => {
@@ -137,9 +135,6 @@ const handleDelete = async (questionId: string) => {
       [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
     });
 
-
-    
-
   return (
     <Container>
       <div id="wd-quiz-editor">
@@ -221,13 +216,10 @@ const handleDelete = async (questionId: string) => {
               </Col>
             </Row>
 
-              <p>Max Number of Attempts:</p>
-            <Form.Control
-            type="number"
-            value={quiz.maxAttempts}
-             
-              onChange={u("maxAttempts")}
-              
+            <Form.Check
+              label="Multiple Attempts"
+              checked={quiz.multipleAttempts}
+              onChange={u("multipleAttempts")}
             />
             <Form.Control
               className="mb-2"
@@ -383,17 +375,6 @@ const handleDelete = async (questionId: string) => {
       >
         Delete
       </Button>
-      <Button
-  variant="outline-primary"
-  size="sm"
-  className="mt-3"
-  onClick={() =>
-    navigate(`/Kambaz/Courses/${cid}/Quizzes/${qid}/edit/${q._id}`)
-  }
->
-  Edit
-</Button>
-
     </div>
   ))}
 </Tab>

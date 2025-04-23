@@ -50,8 +50,8 @@ export const deleteQuestion = async (qid: string, questionId: string) => {
 };
 
 export const submitAttempt = async (quizId: string, score: number) => {
-  const  res = await axios.post(`${QUIZZES_API}/${quizId}/attempts`, {
+  const { data } = await axios.post(`${QUIZZES_API}/${quizId}/attempts`, {
     score,
   });
-  return res;
+  return data;
 };

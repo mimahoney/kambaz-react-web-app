@@ -189,7 +189,7 @@ export default function QuizPreview() {
 
       {quiz.attempts?.length > 0 && (
         <div className="mt-5">
-          <h4> Attempt History</h4>
+          <h4>📜 Attempt History</h4>
           <ul className="list-group">
             {quiz.attempts.map((a: any, i: number) => (
               <li key={a._id} className="list-group-item d-flex justify-content-between">

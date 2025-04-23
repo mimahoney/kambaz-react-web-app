@@ -69,40 +69,10 @@ export default function MultipleChoiceEditor() {
     });
   };
 
-  // const saveQuestion = async () => {
-  //   await questionClient.createQuestionForQuiz(qid!, question);
-  //   setQuestions([...questions, question]);
-  //   navigate(`/Kambaz/Courses/${cid}/Quizzes`);
-  // };
-
-  const { questionId } = useParams();
-  useEffect(() => {
-    if (questionId) {
-      const load = async () => {
-        const existing = await questionClient.findQuestionById(qid!, questionId);
-        setQuestion(existing);
-      };
-      load();
-    }
-  }, [questionId]);
-  
   const saveQuestion = async () => {
-    if (!qid) return;
-  
-    try {
-      if (question._id && question) {
-        // Update the existing question
-        await questionClient.updateQuestion(qid, question._id, question);
-      } else {
-        // Create a new question
-        const created = await questionClient.createQuestionForQuiz(qid, question);
-        setQuestions([...questions, created]);
-      }
-  
-      navigate(`/Kambaz/Courses/${cid}/Quizzes/${qid}`);
-    } catch (err) {
-      console.error("Failed to save question:", err);
-    }
+    await questionClient.createQuestionForQuiz(qid!, question);
+    setQuestions([...questions, question]);
+    navigate(`/Kambaz/Courses/${cid}/Quizzes`);
   };
 
   return (

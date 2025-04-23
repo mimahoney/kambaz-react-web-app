@@ -9,8 +9,6 @@ import { FaAlignJustify } from "react-icons/fa"
 import PeopleTable from "./People/Table"
 import  QuestionRouter from "./Quizzes/QuestionRouter.tsx"; 
 import QuizPreview from "./Quizzes/QuizPreview.tsx";
-import TakeQuiz from "./Quizzes/TakeQuiz.tsx";
-import QuestionEditor from "./Quizzes/QuizEditor.tsx"
 
 //changes
 import * as client from "../Enrollments/client";
@@ -43,11 +41,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
           <Route path="Assignments" element={<Assignments />} />
           <Route path="Assignments/:aid" element={<AssignmentEditor />} />
           <Route path="People" element={<PeopleTable />} />
-          <Route path="Quizzes/:qid/edit/:questionId" element={<QuestionRouter />} />
-
           <Route path="Quizzes/:qid/new/:type" element={<QuestionRouter />} />
           <Route path="Quizzes/:qid/preview" element={<QuizPreview />} />
-          <Route path="Quizzes/:qid/take" element={<TakeQuiz />} />
           <Route path="Quizzes/:qid" element={<QuizEditor />} />
           <Route path="Quizzes/new" element={<QuizEditor />} />
           <Route path="Quizzes" element={<Quizzes />} />
